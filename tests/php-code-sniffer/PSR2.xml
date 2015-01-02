@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpcs version="2.1.1">
+<file name="C:\Users\Transformer-\Documents\Git\danielgp.GitHub\info-compare\source\common\common.inc.php" errors="0" warnings="1" fixable="0">
+ <warning line="37" column="181" source="Generic.Files.LineLength.TooLong" severity="5" fixable="0">Line exceeds 120 characters; contains 181 characters</warning>
+</file>
+<file name="C:\Users\Transformer-\Documents\Git\danielgp.GitHub\info-compare\source\compare\compare.class.inc.php" errors="0" warnings="3" fixable="0">
+ <warning line="82" column="143" source="Generic.Files.LineLength.TooLong" severity="5" fixable="0">Line exceeds 120 characters; contains 143 characters</warning>
+ <warning line="107" column="142" source="Generic.Files.LineLength.TooLong" severity="5" fixable="0">Line exceeds 120 characters; contains 142 characters</warning>
+ <warning line="308" column="143" source="Generic.Files.LineLength.TooLong" severity="5" fixable="0">Line exceeds 120 characters; contains 151 characters</warning>
+</file>
+<file name="C:\Users\Transformer-\Documents\Git\danielgp.GitHub\info-compare\source\compare\index.php" errors="1" warnings="0" fixable="1">
+ <error line="32" column="43" source="PSR2.Files.EndFileNewline.TooMany" severity="5" fixable="1">Expected 1 blank line at end of file; 3 found</error>
+</file>
+<file name="C:\Users\Transformer-\Documents\Git\danielgp.GitHub\info-compare\source\info\3rdparty.UserAgentParser.php" errors="17" warnings="6" fixable="16">
+ <error line="1" column="1" source="Generic.Files.LineEndings.InvalidEOLChar" severity="5" fixable="1">End of line character is invalid; expected &quot;\n&quot; but found &quot;\r\n&quot;</error>
+ <error line="62" column="1" source="PSR1.Classes.ClassDeclaration.MissingNamespace" severity="5" fixable="0">Each class must be in a namespace of at least one level (a top-level vendor name)</error>
+ <warning line="183" column="158" source="Generic.Files.LineLength.TooLong" severity="5" fixable="0">Line exceeds 120 characters; contains 158 characters</warning>
+ <error line="368" column="5" source="PSR2.Methods.MethodDeclaration.StaticBeforeVisibility" severity="5" fixable="1">The static declaration must come after the visibility declaration</error>
+ <error line="391" column="5" source="PSR2.Methods.MethodDeclaration.StaticBeforeVisibility" severity="5" fixable="1">The static declaration must come after the visibility declaration</error>
+ <error line="411" column="5" source="PSR2.Methods.MethodDeclaration.StaticBeforeVisibility" severity="5" fixable="1">The static declaration must come after the visibility declaration</error>
+ <warning line="445" column="163" source="Generic.Files.LineLength.TooLong" severity="5" fixable="0">Line exceeds 120 characters; contains 163 characters</warning>
+ <warning line="447" column="126" source="Generic.Files.LineLength.TooLong" severity="5" fixable="0">Line exceeds 120 characters; contains 126 characters</warning>
+ <warning line="448" column="151" source="Generic.Files.LineLength.TooLong" severity="5" fixable="0">Line exceeds 120 characters; contains 151 characters</warning>
+ <warning line="449" column="150" source="Generic.Files.LineLength.TooLong" severity="5" fixable="0">Line exceeds 120 characters; contains 150 characters</warning>
+ <error line="565" column="5" source="PSR2.Methods.MethodDeclaration.StaticBeforeVisibility" severity="5" fixable="1">The static declaration must come after the visibility declaration</error>
+ <warning line="649" column="124" source="Generic.Files.LineLength.TooLong" severity="5" fixable="0">Line exceeds 120 characters; contains 124 characters</warning>
+ <error line="652" column="5" source="PSR2.Methods.MethodDeclaration.StaticBeforeVisibility" severity="5" fixable="1">The static declaration must come after the visibility declaration</error>
+ <error line="658" column="9" source="Squiz.ControlStructures.ControlSignature.SpaceAfterKeyword" severity="5" fixable="1">Expected 1 space after IF keyword; 0 found</error>
+ <error line="660" column="13" source="Squiz.ControlStructures.ControlSignature.SpaceAfterKeyword" severity="5" fixable="1">Expected 1 space after IF keyword; 0 found</error>
+ <error line="660" column="16" source="PSR2.ControlStructures.ControlStructureSpacing.SpacingAfterOpenBrace" severity="5" fixable="1">Expected 0 spaces after opening bracket; 1 found</error>
+ <error line="667" column="5" source="PSR2.Methods.MethodDeclaration.StaticBeforeVisibility" severity="5" fixable="1">The static declaration must come after the visibility declaration</error>
+ <error line="676" column="5" source="PSR2.Methods.MethodDeclaration.StaticBeforeVisibility" severity="5" fixable="1">The static declaration must come after the visibility declaration</error>
+ <error line="689" column="5" source="PSR2.Methods.MethodDeclaration.StaticBeforeVisibility" severity="5" fixable="1">The static declaration must come after the visibility declaration</error>
+ <error line="696" column="9" source="Squiz.ControlStructures.ControlSignature.SpaceAfterKeyword" severity="5" fixable="1">Expected 1 space after IF keyword; 0 found</error>
+ <error line="705" column="5" source="PSR2.Methods.MethodDeclaration.StaticBeforeVisibility" severity="5" fixable="1">The static declaration must come after the visibility declaration</error>
+ <error line="714" column="5" source="PSR2.Methods.MethodDeclaration.StaticBeforeVisibility" severity="5" fixable="1">The static declaration must come after the visibility declaration</error>
+ <error line="719" column="5" source="PSR2.Methods.MethodDeclaration.StaticBeforeVisibility" severity="5" fixable="1">The static declaration must come after the visibility declaration</error>
+</file>
+<file name="C:\Users\Transformer-\Documents\Git\danielgp.GitHub\info-compare\source\info\manage.info.class.inc.php" errors="0" warnings="4" fixable="0">
+ <warning line="313" column="149" source="Generic.Files.LineLength.TooLong" severity="5" fixable="0">Line exceeds 120 characters; contains 149 characters</warning>
+ <warning line="415" column="127" source="Generic.Files.LineLength.TooLong" severity="5" fixable="0">Line exceeds 120 characters; contains 127 characters</warning>
+ <warning line="431" column="167" source="Generic.Files.LineLength.TooLong" severity="5" fixable="0">Line exceeds 120 characters; contains 167 characters</warning>
+ <warning line="485" column="397" source="Generic.Files.LineLength.TooLong" severity="5" fixable="0">Line exceeds 120 characters; contains 397 characters</warning>
+</file>
+<file name="C:\Users\Transformer-\Documents\Git\danielgp.GitHub\info-compare\source\Tomcat+JavaBridge\TomcatInfos.php" errors="2" warnings="0" fixable="2">
+ <error line="1" column="1" source="Generic.Files.LineEndings.InvalidEOLChar" severity="5" fixable="1">End of line character is invalid; expected &quot;\n&quot; but found &quot;\r\n&quot;</error>
+ <error line="48" column="1" source="PSR2.Files.EndFileNewline.NoneFound" severity="5" fixable="1">Expected 1 newline at end of file; 0 found</error>
+</file>
+</phpcs>
+
