@@ -1,7 +1,7 @@
 {
-    "name": "danielgp/info-compare",
-    "description": "Info comparison package via CURL extension from PHP",
-    "time": "2015-01-03 12:00:00",
+    "name": "danielgp/informator",
+    "description": "Informations about environment served via web",
+    "time": "2015-01-04 23:00:00",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -19,6 +19,6 @@
     "minimum-stability": "stable",
     "prefer-stable":    true,
     "archive": {
-        "exclude": ["/nbproject", "*.po", "/source/scss", "/source/js/tabber.js", "/vendor", "/tests"]
+        "exclude": ["/nbproject", "/vendor", "/tests"]
     }
 }
