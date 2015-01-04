@@ -26,7 +26,7 @@
  *
  */
 
-namespace danielgp\info_compare;
+namespace danielgp\informator;
 
 /**
  * Queries used to handle SQL data

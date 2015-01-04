@@ -26,7 +26,7 @@
  *
  */
 
-namespace danielgp\info_compare;
+namespace danielgp\informator;
 
 class JsonBrain
 {

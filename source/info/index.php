@@ -30,4 +30,4 @@ require_once '3rdparty.UserAgentParser.php';
 require_once '../common/common.inc.php';
 require_once 'manage.info.class.inc.php';
 
-$app = new danielgp\info_compare\JsonBrain();
+$app = new danielgp\informator\JsonBrain();
