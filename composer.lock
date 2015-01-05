@@ -1,0 +1,55 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "700ca0d0f42f2229444c4cdb8ee26268",
+    "packages": [
+        {
+            "name": "danielgp/common-lib",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/danielgp/common-lib.git",
+                "reference": "82a17f7a8c686292c2823ac168b62933725253b8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/danielgp/common-lib/zipball/82a17f7a8c686292c2823ac168b62933725253b8",
+                "reference": "82a17f7a8c686292c2823ac168b62933725253b8",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-mysqli": "*",
+                "php": ">=5.4"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Daniel Popiniuc",
+                    "email": "danielpopiniuc@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Informations about environment served via web",
+            "time": "2015-01-04 23:00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": true,
+    "platform": {
+        "php": ">=5.4",
+        "ext-curl": "*",
+        "ext-mysqli": "*"
+    },
+    "platform-dev": []
+}

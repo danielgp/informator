@@ -31,7 +31,7 @@ namespace danielgp\informator;
 class JsonBrain
 {
 
-    use CommonCode;
+    use \danielgp\common_lib\CommonCode;
 
     private $filesFromDir;
     protected $mySQLconnection = null;
@@ -83,57 +83,6 @@ class JsonBrain
         } else {
             echo '<span style="background-color:red;color:white;">Label not set... :-(</span>';
         }
-    }
-
-    /**
-     * Sets the gzip footer for HTML
-     */
-    private function setFooterGZiped()
-    {
-        if (isset($_SERVER['HTTP_ACCEPT_ENCODING'])) {
-            if (strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) {
-                if (extension_loaded('zlib')) {
-                    $gzip_contents = ob_get_contents();
-                    ob_end_clean();
-                    $gzip_size     = strlen($gzip_contents);
-                    $gzip_crc      = crc32($gzip_contents);
-                    $gzip_contents = gzcompress($gzip_contents, 9);
-                    $gzip_contents = substr($gzip_contents, 0, strlen($gzip_contents) - 4);
-                    echo "\x1f\x8b\x08\x00\x00\x00\x00\x00";
-                    echo $gzip_contents;
-                    echo pack('V', $gzip_crc);
-                    echo pack('V', $gzip_size);
-                }
-            }
-        }
-    }
-
-    /**
-     * Sets the gzip header for HTML
-     */
-    private function setHeaderGZiped()
-    {
-        if (isset($_SERVER['HTTP_ACCEPT_ENCODING'])) {
-            if (strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip')) {
-                if (extension_loaded('zlib')) {
-                    ob_start();
-                    ob_implicit_flush(0);
-                    header('Content-Encoding: gzip');
-                }
-            }
-        }
-    }
-
-    /**
-     * Sets the no-cache header
-     */
-    private function setHeaderNoCache($contentType = 'application/json')
-    {
-        header("Content-Type: " . $contentType . "; charset=utf-8");
-        header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-        header("Cache-Control: no-store, no-cache, must-revalidate");
-        header("Cache-Control: post-check=0, pre-check=0", false);
-        header("Pragma: no-cache");
     }
 
     /**
@@ -250,25 +199,6 @@ class JsonBrain
         $sInfo['MySQL']['GlobalVariables'] = $this->getMySQLglobalVariables();
         ksort($sInfo['MySQL']);
         return $sInfo['MySQL'];
-    }
-
-    /**
-     * Returns the IP of the client
-     *
-     * @return string
-     */
-    private function getRealIpAddress()
-    {
-        //check ip from share internet
-        if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-            $ip = $_SERVER['HTTP_CLIENT_IP'];
-        } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-            //to check ip is pass from proxy
-            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-        } else {
-            $ip = $_SERVER['REMOTE_ADDR'];
-        }
-        return $ip;
     }
 
     private function getPhpDetails()
