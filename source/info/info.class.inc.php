@@ -437,7 +437,7 @@ class JsonBrain
             'HTTP_HOST'                         => $_SERVER['HTTP_HOST'],
             'HTTP_REFERER'                      => @$_SERVER['HTTP_REFERER'],
             'HTTP_USER_AGENT'                   => $_SERVER['HTTP_USER_AGENT'],
-            'IP'                                => $this->getRealIpAddress(),
+            'IP'                                => $this->getClientRealIpAddress(),
             'IP direct'                         => $_SERVER['REMOTE_ADDR'],
             'OS Name'                           => $os['name'],
             'OS Architecture'                   => $br['customAdded']['clientOsArchitecture']

@@ -27,7 +27,7 @@
  */
 require_once '../config/MySQL.credentials.config.inc.php';
 require_once '3rdparty.UserAgentParser.php';
-require_once '../../vendor/danielgp/common-lib/source/common.inc.php';
-require_once 'manage.info.class.inc.php';
+require_once '../../vendor/autoload.php';
+require_once 'info.class.inc.php';
 
-$app = new danielgp\informator\JsonBrain();
+$app = new \danielgp\informator\JsonBrain();

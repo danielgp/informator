@@ -1,24 +1,30 @@
 {
     "name": "danielgp/informator",
     "description": "Informations about environment served via web",
-    "time": "2015-01-04 23:00:00",
+    "time": "2015-01-05 17:35:00",
     "type": "library",
     "license": "MIT",
     "authors": [
         {
-            "name":     "Daniel Popiniuc",
-            "email":    "danielpopiniuc@gmail.com",
-            "role":     "Developer"
+            "name": "Daniel Popiniuc",
+            "email": "danielpopiniuc@gmail.com",
+            "role": "Developer"
         }
     ],
     "require": {
         "php": ">=5.4",
         "ext-curl": "*",
         "ext-mysqli": "*",
-        "danielgp/common-lib": ">=1.0.0"
+        "danielgp/common-lib": ">=1.0.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "": "source/",
+            "danielgp\\common_lib\\": "vendor/danielgp/common-lib/"
+        }
     },
     "minimum-stability": "stable",
-    "prefer-stable":    true,
+    "prefer-stable": true,
     "archive": {
         "exclude": ["/nbproject", "/vendor", "/tests"]
     }
