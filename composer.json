@@ -24,7 +24,8 @@
             "DeviceDetector\\" : "vendor/piwik/device-detector/"
         },
         "classmap": [
-            "source/info/JsonBrain.php"
+            "source/info/JsonBrain.php",
+            "source/info/AppQueries.php"
         ]
     },
     "minimum-stability": "stable",

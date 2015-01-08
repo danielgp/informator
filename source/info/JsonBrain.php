@@ -33,6 +33,8 @@ class JsonBrain
 
     use \danielgp\common_lib\CommonCode;
 
+use \danielgp\informator\AppQueries;
+
     private $filesFromDir;
     protected $mySQLconnection = null;
 
@@ -82,8 +84,7 @@ class JsonBrain
             . '(with function `' . __FUNCTION__ . '`)...</p>';
             return null;
         }
-        $query  = $this->storedQuery('ActiveDatabases');
-        $result = $this->mySQLconnection->query($query);
+        $result = $this->mySQLconnection->query($this->sActiveDatabases());
         if ($result) {
             $iNoOfRows = $result->num_rows;
             for ($counter = 0; $counter < $iNoOfRows; $counter++) {
@@ -116,8 +117,7 @@ class JsonBrain
             . '(with function `' . __FUNCTION__ . '`)...</p>';
             return null;
         }
-        $query  = $this->storedQuery('ActiveEngines');
-        $result = $this->mySQLconnection->query($query);
+        $result = $this->mySQLconnection->query($this->sActiveEngines());
         if ($result) {
             $iNoOfRows = $result->num_rows;
             for ($counter = 0; $counter < $iNoOfRows; $counter++) {
@@ -243,30 +243,6 @@ class JsonBrain
             ksort($sReturn);
         } else {
             $sReturn['Tomcat'] = ['-'];
-        }
-        return $sReturn;
-    }
-
-    /**
-     * Place for all MySQL queries used within current class
-     *
-     * @version 20080525
-     * @param string $label
-     * @param array $given_parameters
-     * @return string
-     */
-    final protected function storedQuery($label, $given_parameters = null)
-    {
-        require_once 'sql.queries.inc.php';
-        $tq = new AppQueries;
-        // redirection because of a reserved word
-        if ($label == 'use') {
-            $label = 'usee';
-        }
-        // end of redirection
-        $sReturn = call_user_func_array([$tq, 'setRightQuery'], [$label, $given_parameters]);
-        if ($sReturn === false) {
-            echo $this->setFeedback(0, 'Error', 'The MySQL query labeled %s is not defined...' . $label);
         }
         return $sReturn;
     }

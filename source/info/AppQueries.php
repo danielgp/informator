@@ -36,7 +36,7 @@ namespace danielgp\informator;
 class AppQueries
 {
 
-    private function sActiveDatabases()
+    protected function sActiveDatabases()
     {
         return 'SELECT `SCHEMA_NAME` As `Db` '
             . ', `DEFAULT_CHARACTER_SET_NAME` AS `DbCharset` '
@@ -46,7 +46,7 @@ class AppQueries
             . 'GROUP BY `SCHEMA_NAME`;';
     }
 
-    private function sActiveEngines()
+    protected function sActiveEngines()
     {
         return 'SELECT `ENGINE` AS `Engine`'
             . ', `SUPPORT` AS `Support`'
@@ -55,24 +55,5 @@ class AppQueries
             . 'WHERE (`SUPPORT` IN ("DEFAULT", "YES")) '
             . 'AND (`ENGINE` != "PERFORMANCE_SCHEMA") '
             . 'GROUP BY `ENGINE`;';
-    }
-
-    public function setRightQuery($label, $given_parameters = null)
-    {
-        $label = 's' . $label;
-        if (method_exists($this, $label)) {
-            if (is_null($given_parameters)) {
-                return call_user_func([$this, $label]);
-            } else {
-                if (is_array($given_parameters)) {
-                    return call_user_func_array([$this, $label], [$given_parameters]);
-                } else {
-                    return call_user_func([$this, $label], $given_parameters);
-                }
-            }
-        } else {
-            echo '<hr/>Unknown query... (wanted was `' . $label . '`)<hr/>';
-            return false;
-        }
     }
 }
