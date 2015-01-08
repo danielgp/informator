@@ -28,12 +28,10 @@
 
 namespace danielgp\informator;
 
-class JsonBrain
+class JsonBrain extends AppQueries
 {
 
     use \danielgp\common_lib\CommonCode;
-
-use \danielgp\informator\AppQueries;
 
     private $filesFromDir;
     protected $mySQLconnection = null;
@@ -58,7 +56,7 @@ use \danielgp\informator\AppQueries;
             if (in_array($_REQUEST['Label'], array_keys($knownLabels))) {
                 $this->setHeaderGZiped();
                 $this->setHeaderNoCache('application/json');
-                echo $this->setArray2json($aRreturn);
+                echo $this->setArray2json($knownLabels[$_REQUEST['Label']]);
                 $this->setFooterGZiped();
             } else {
                 echo '<span style="background-color:red;color:white;">Unknown Label... :-(</span>';
@@ -254,15 +252,15 @@ use \danielgp\informator\AppQueries;
      */
     protected function systemInfo()
     {
-        $sInfo                    = [];
-        $sInfo['Apache']          = $this->getApacheDetails();
-        $sInfo['Client']          = $this->getClientBrowserDetails();
-        $sInfo['InfoCompareFile'] = $this->getFileDetails(__FILE__);
-        $sInfo['MySQL']           = $this->getMySQLinfo();
-        $sInfo['PHP']             = $this->getPhpDetails();
-        $sInfo['Server']          = $this->getServerDetails();
-        $sInfo['Tomcat']          = $this->getTomcatDetails();
-        return $sInfo;
+        return [
+            'Apache'          => $this->getApacheDetails(),
+            'Client'          => $this->getClientBrowserDetails(),
+            'InfoCompareFile' => $this->getFileDetails(__FILE__),
+            'MySQL'           => $this->getMySQLinfo(),
+            'PHP'             => $this->getPhpDetails(),
+            'Server'          => $this->getServerDetails(),
+            'Tomcat'          => $this->getTomcatDetails(),
+        ];
     }
 
     final protected function connectToMySql()
