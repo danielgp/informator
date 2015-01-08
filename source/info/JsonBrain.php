@@ -241,7 +241,9 @@ class JsonBrain
     private function getTomcatDetails()
     {
         $sInfo['Tomcat'] = $this->getContentFromUrlThroughCurl('http://' . $_SERVER['SERVER_NAME'] . ':8080/JavaBridge/TomcatInfos.php')['response'];
-        ksort($sInfo['Tomcat']);
+        if (is_array($sInfo['Tomcat'])) {
+            ksort($sInfo['Tomcat']);
+        }
         return $sInfo['Tomcat'];
     }
 
@@ -325,12 +327,8 @@ class JsonBrain
      * @param  type    $prmtrs
      * @return boolean
      */
-    public function gate2transmit($label, $prmtrs = null)
+    protected function gate2transmit($label, $prmtrs = null)
     {
-//        global $db;
-//        if ($db == null) {
-//            $this->setConnectionHost(true);
-//        }
         if (method_exists($this, $label)) {
             if (is_null($prmtrs)) {
                 $aRreturn = call_user_func([$this, $label]);
@@ -361,6 +359,22 @@ class JsonBrain
             echo '<span style="background-color:red;color:white;">Functie necunoscuta in `' . __FILE__ . '`!' . PHP_EOL . '(cea cautata este `' . $label . '`)</span>';
             return '';
         }
+    }
+
+    private function getAcceptFomrUserAgent()
+    {
+        $sReturn           = [];
+        $sReturn['accept'] = $_SERVER['HTTP_ACCEPT'];
+        if (isset($_SERVER['HTTP_ACCEPT_CHARSET'])) {
+            $sReturn['accept_charset'] = $_SERVER['HTTP_ACCEPT_CHARSET'];
+        }
+        if (isset($_SERVER['HTTP_ACCEPT_ENCODING'])) {
+            $sReturn['accept_encoding'] = $_SERVER['HTTP_ACCEPT_ENCODING'];
+        }
+        if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+            $sReturn['accept_language'] = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+        }
+        return $sReturn;
     }
 
     private function getApacheDetails()
@@ -399,49 +413,88 @@ class JsonBrain
         return $sInfo['Apache'];
     }
 
+    private function getArchitectureFromUserAgent($userAgent, $targetToAnalyze = 'os')
+    {
+        $isX64 = false;
+        switch ($targetToAnalyze) {
+            case 'browser':
+                if (strpos($userAgent, 'Win64') && strpos($userAgent, 'x64')) {
+                    $isX64 = true;
+                }
+                break;
+            case 'os':
+                if (strpos($userAgent, 'x86_64')) {
+                    $isX64 = true;
+                } elseif (strpos($userAgent, 'x86-64')) {
+                    $isX64 = true;
+                } elseif (strpos($userAgent, 'Win64')) {
+                    $isX64 = true;
+                } elseif (strpos($userAgent, 'x64;')) {
+                    $isX64 = true;
+                } elseif (strpos(strtolower($userAgent, 'amd64'))) {
+                    $isX64 = true;
+                } elseif (strpos($userAgent, 'WOW64')) {
+                    $isX64 = true;
+                } elseif (strpos($userAgent, 'x64_64')) {
+                    $isX64 = true;
+                }
+                break;
+            default:
+                return 'Unknown target to analyze...';
+                break;
+        }
+        if ($isX64) {
+            return 'x64 (64 bit)';
+        } else {
+            return 'x86 (32 bit)';
+        }
+    }
+
     private function getClientBrowserDetails()
     {
-        $uap                     = new \UserAgentParser();
-        $br                      = $uap->getBrowser($_SERVER['HTTP_USER_AGENT']);
-        $os                      = $uap->getOperatingSystem($_SERVER['HTTP_USER_AGENT']);
-        $cVersion                = str_replace('.', '', $br['version']);
-        $br['ComparisonVersion'] = $cVersion . str_repeat('0', ((strlen($cVersion) < 3 ? 3 : 4) - strlen($cVersion)));
-        $http_accept_language    = isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : '';
-        preg_match_all('/([a-z]{2})(?:-[a-zA-Z]{2})?/', $http_accept_language, $m);
-        $preferrences            = [
-            'Preferred locale'    => $m[0],
-            'Preferred languages' => array_values(array_unique(array_values($m[1])))
-        ];
-        if (strpos($_SERVER['HTTP_USER_AGENT'], 'x86_64') || strpos($_SERVER['HTTP_USER_AGENT'], 'x86-64') || strpos($_SERVER['HTTP_USER_AGENT'], 'Win64') || strpos($_SERVER['HTTP_USER_AGENT'], 'x64;') || strpos($_SERVER['HTTP_USER_AGENT'], 'amd64') || strpos($_SERVER['HTTP_USER_AGENT'], 'AMD64') || strpos($_SERVER['HTTP_USER_AGENT'], 'WOW64') || strpos($_SERVER['HTTP_USER_AGENT'], 'x64_64')) {
-            $br['customAdded']['clientOsArchitecture'] = 'x64 (64 bit)';
+        if (isset($_GET['ua'])) {
+            $userAgent = $_GET['ua'];
         } else {
-            $br['customAdded']['clientOsArchitecture'] = 'x86 (32 bit)';
+            $userAgent = $_SERVER['HTTP_USER_AGENT'];
         }
-        if (strpos($_SERVER['HTTP_USER_AGENT'], 'Win64') && strpos($_SERVER['HTTP_USER_AGENT'], 'x64')) {
-            $br['customAdded']['clientBrowserArchitecture'] = 'x64 (64 bit)';
+        $dd = new \DeviceDetector\DeviceDetector($userAgent);
+        $dd->discardBotInformation();
+        $dd->parse();
+        if ($dd->isBot()) {
+            // handle bots,spiders,crawlers,...
+            return [
+                'Bot' => $dd->getBot(),
+            ];
         } else {
-            $br['customAdded']['clientBrowserArchitecture'] = 'x86 (32 bit)';
+            $br                   = [];
+            $http_accept_language = isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : '';
+            preg_match_all('/([a-z]{2})(?:-[a-zA-Z]{2})?/', $http_accept_language, $m);
+            $browserInformation   = array_merge($dd->getClient(), [
+                'architecture'        => $this->getArchitectureFromUserAgent($userAgent, 'browser'),
+                'connection'          => $_SERVER['HTTP_CONNECTION'],
+                'host'                => $_SERVER['HTTP_HOST'],
+                'preferred locale'    => $m[0],
+                'preferred languages' => array_values(array_unique(array_values($m[1]))),
+                'referrer'            => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : ''),
+                'user_agent'          => $_SERVER['HTTP_USER_AGENT'],
+                ], $this->getAcceptFomrUserAgent());
+            ksort($browserInformation);
+            $osInfo               = array_merge($dd->getOs(), [
+                'architecture' => $this->getArchitectureFromUserAgent($userAgent, 'os')
+            ]);
+            ksort($osInfo);
+            return [
+                'Browser' => $browserInformation,
+                'Device'  => [
+                    'brand'     => $dd->getDevice(),
+                    'ip'        => $this->getClientRealIpAddress(),
+                    'ip direct' => $_SERVER['REMOTE_ADDR'],
+                    'model'     => $dd->getModel(),
+                    'name'      => $dd->getBrand(),
+                ],
+                'OS'      => $osInfo,
+            ];
         }
-        return [
-            'Browser'                           => $br['name'],
-            'Browser Detected Version Original' => $br['version'],
-            'Browser Detected Version'          => $br['ComparisonVersion'],
-            'Browser Preferred locale'          => $preferrences['Preferred locale'],
-            'Browser Preferred languages'       => $preferrences['Preferred languages'],
-            'Browser Architecture'              => $br['customAdded']['clientBrowserArchitecture'],
-            'HTTP_ACCEPT'                       => $_SERVER['HTTP_ACCEPT'],
-            'HTTP_ACCEPT_CHARSET'               => @$_SERVER['HTTP_ACCEPT_CHARSET'],
-            'HTTP_ACCEPT_ENCODING'              => @$_SERVER['HTTP_ACCEPT_ENCODING'],
-            'HTTP_ACCEPT_LANGUAGE'              => @$_SERVER['HTTP_ACCEPT_LANGUAGE'],
-            'HTTP_CONNECTION'                   => $_SERVER['HTTP_CONNECTION'],
-            'HTTP_HOST'                         => $_SERVER['HTTP_HOST'],
-            'HTTP_REFERER'                      => @$_SERVER['HTTP_REFERER'],
-            'HTTP_USER_AGENT'                   => $_SERVER['HTTP_USER_AGENT'],
-            'IP'                                => $this->getClientRealIpAddress(),
-            'IP direct'                         => $_SERVER['REMOTE_ADDR'],
-            'OS Name'                           => $os['name'],
-            'OS Architecture'                   => $br['customAdded']['clientOsArchitecture']
-        ];
     }
 
     /**

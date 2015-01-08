@@ -15,13 +15,18 @@
         "php": ">=5.4",
         "ext-curl": "*",
         "ext-mysqli": "*",
-        "danielgp/common-lib": ">=1.0.6"
+        "danielgp/common-lib": ">=1.0.6",
+        "piwik/device-detector": ">=2.8.0"
     },
     "autoload": {
         "psr-4": {
-            "": "source/",
-            "danielgp\\common_lib\\": "vendor/danielgp/common-lib/"
-        }
+            "": "source/info/",
+            "danielgp\\common_lib\\": "vendor/danielgp/common-lib/",
+            "DeviceDetector\\" : "vendor/piwik/device-detector/"
+        },
+        "classmap": [
+            "source/info/JsonBrain.php"
+        ]
     },
     "minimum-stability": "stable",
     "prefer-stable": true,

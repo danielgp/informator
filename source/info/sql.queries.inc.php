@@ -46,7 +46,7 @@ class AppQueries
             . 'GROUP BY `SCHEMA_NAME`;';
     }
 
-    private function sActiveEngines($parameters)
+    private function sActiveEngines()
     {
         return 'SELECT `ENGINE` AS `Engine`'
             . ', `SUPPORT` AS `Support`'
