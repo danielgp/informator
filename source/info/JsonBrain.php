@@ -240,11 +240,16 @@ class JsonBrain
 
     private function getTomcatDetails()
     {
-        $sInfo['Tomcat'] = $this->getContentFromUrlThroughCurl('http://' . $_SERVER['SERVER_NAME'] . ':8080/JavaBridge/TomcatInfos.php')['response'];
-        if (is_array($sInfo['Tomcat'])) {
-            ksort($sInfo['Tomcat']);
+        $url             = 'http://' . $_SERVER['SERVER_NAME'] . ':8080/JavaBridge/TomcatInfos.php';
+        $sInfo['Tomcat'] = $this->getContentFromUrlThroughCurl($url)['response'];
+        $sReturn         = '';
+        if ($this->isJson($sInfo['Tomcat'])) {
+            $sReturn['Tomcat'] = $this->setJson2array($sInfo['Tomcat']);
+            ksort($sReturn);
+        } else {
+            $sReturn['Tomcat'] = ['-'];
         }
-        return $sInfo['Tomcat'];
+        return $sReturn;
     }
 
     /**
