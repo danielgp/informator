@@ -38,47 +38,29 @@ class JsonBrain
 
     public function __construct()
     {
+        $sReturn = null;
         if (isset($_REQUEST['Label'])) {
-            switch ($_REQUEST['Label']) {
-                case 'ApacheInfo':
-                    echo $this->gate2transmit('getApacheDetails');
-                    break;
-                case 'ClientInfo':
-                    echo $this->gate2transmit('getClientBrowserDetails');
-                    break;
-                case 'ListOfFiles':
-                    echo $this->gate2transmit('getListOfFiles', realpath('.'));
-                    break;
-                case 'MySQLactiveDatabases':
-                    echo $this->gate2transmit('getMySQLactiveDatabases');
-                    break;
-                case 'MySQLactiveEngines':
-                    echo $this->gate2transmit('getMySQLactiveEngines');
-                    break;
-                case 'MySQLgenericInfo':
-                    echo $this->gate2transmit('getMySQLgenericInformations');
-                    break;
-                case 'MySQLglobalVariables':
-                    echo $this->gate2transmit('getMySQLglobalVariables');
-                    break;
-                case 'MySQLinfo':
-                    echo $this->gate2transmit('getMySQLinfo');
-                    break;
-                case 'PhpInfo':
-                    echo $this->gate2transmit('getPhpDetails');
-                    break;
-                case 'ServerInfo':
-                    echo $this->gate2transmit('getServerDetails');
-                    break;
-                case 'TomcatInfo':
-                    echo $this->gate2transmit('getTomcatDetails');
-                    break;
-                case 'SysInfo':
-                    echo $this->gate2transmit('systemInfo', true);
-                    break;
-                default:
-                    echo '<span style="background-color:red;color:white;">Unknown Label... :-(</span>';
-                    break;
+            $knownLabels = [
+                'ApacheInfo'           => $this->getApacheDetails(),
+                'ClientInfo'           => $this->getClientBrowserDetails(),
+                'ListOfFiles'          => $this->getListOfFiles(realpath('.')),
+                'MySQLactiveDatabases' => $this->getMySQLactiveDatabases(),
+                'MySQLactiveEngines'   => $this->getMySQLactiveEngines(),
+                'MySQLgenericInfo'     => $this->getMySQLgenericInformations(),
+                'MySQLglobalVariables' => $this->getMySQLglobalVariables(),
+                'MySQLinfo'            => $this->getMySQLinfo(),
+                'PhpInfo'              => $this->getPhpDetails(),
+                'ServerInfo'           => $this->getServerDetails(),
+                'TomcatInfo'           => $this->getTomcatDetails(),
+                'SysInfo'              => $this->systemInfo(),
+            ];
+            if (in_array($_REQUEST['Label'], array_keys($knownLabels))) {
+                $this->setHeaderGZiped();
+                $this->setHeaderNoCache('application/json');
+                echo $this->setArray2json($aRreturn);
+                $this->setFooterGZiped();
+            } else {
+                echo '<span style="background-color:red;color:white;">Unknown Label... :-(</span>';
             }
         } else {
             echo '<span style="background-color:red;color:white;">Label not set... :-(</span>';
@@ -91,7 +73,7 @@ class JsonBrain
      * @param  boolean $full
      * @return array
      */
-    private function getMySQLactiveDatabases($full = false)
+    private function getMySQLactiveDatabases()
     {
         $this->connectToMySql();
         if (is_null($this->mySQLconnection)) {
@@ -101,17 +83,22 @@ class JsonBrain
             . '(with function `' . __FUNCTION__ . '`)...</p>';
             return null;
         }
-        $query     = $this->storedQuery('ActiveDatabases');
-        $result    = $this->mySQLconnection->query($query) or die('In functia <b>'
+        $query  = $this->storedQuery('ActiveDatabases');
+        $result = $this->mySQLconnection->query($query);
+        if ($result) {
+            $iNoOfRows = $result->num_rows;
+            for ($counter = 0; $counter < $iNoOfRows; $counter++) {
+                $line[] = $result->fetch_assoc();
+            }
+            $result->close();
+        } else {
+            $line['error'] = 'In functia <b>'
                 . __FUNCTION__ . '</b>'
                 . ', nu se poate efectua interogarea '
                 . '<b>' . $query . '</b>'
-                . ' because <b>' . $this->mySQLconnection->error . '<b/>...');
-        $iNoOfRows = $result->num_rows;
-        for ($counter = 0; $counter < $iNoOfRows; $counter++) {
-            $line[] = $result->fetch_assoc();
+                . ' because <b>' . $this->mySQLconnection->error
+                . '<b/>...';
         }
-        $result->close();
         return $line;
     }
 
@@ -130,17 +117,22 @@ class JsonBrain
             . '(with function `' . __FUNCTION__ . '`)...</p>';
             return null;
         }
-        $query     = $this->storedQuery('ActiveEngines');
-        $result    = $this->mySQLconnection->query($query) or die('In functia <b>'
+        $query  = $this->storedQuery('ActiveEngines');
+        $result = $this->mySQLconnection->query($query);
+        if ($result) {
+            $iNoOfRows = $result->num_rows;
+            for ($counter = 0; $counter < $iNoOfRows; $counter++) {
+                $line[] = $result->fetch_assoc();
+            }
+            $result->close();
+        } else {
+            $line['erorr'] = 'In functia <b>'
                 . __FUNCTION__ . '</b>'
                 . ', nu se poate efectua interogarea '
                 . '<b>' . $query . '</b>'
-                . ' because <b>' . $this->mySQLconnection->error . '<b/>...');
-        $iNoOfRows = $result->num_rows;
-        for ($counter = 0; $counter < $iNoOfRows; $counter++) {
-            $line[] = $result->fetch_assoc();
+                . ' because <b>' . $this->mySQLconnection->error
+                . '<b/>...';
         }
-        $result->close();
         return $line;
     }
 
@@ -175,18 +167,22 @@ class JsonBrain
             . '(with function `' . __FUNCTION__ . '`)...</p>';
             return null;
         }
-        $query     = 'SHOW GLOBAL VARIABLES;';
-        $result    = $this->mySQLconnection->query($query) or die('In functia <b>'
+        $query  = 'SHOW GLOBAL VARIABLES;';
+        $result = $this->mySQLconnection->query($query);
+        if ($result) {
+            $iNoOfRows = $result->num_rows;
+            for ($counter = 0; $counter < $iNoOfRows; $counter++) {
+                $line                   = $result->fetch_row();
+                $array2return[$line[0]] = $line[1];
+            }
+            $result->close();
+        } else {
+            $line['error'] = 'In functia <b>'
                 . __FUNCTION__ . '</b>'
                 . ', nu se poate efectua interogarea '
                 . '<b>' . $query . '</b>'
-                . ' because <b>' . $this->mySQLconnection->error . '<b/>...');
-        $iNoOfRows = $result->num_rows;
-        for ($counter = 0; $counter < $iNoOfRows; $counter++) {
-            $line                   = $result->fetch_row();
-            $array2return[$line[0]] = $line[1];
+                . ' because <b>' . $this->mySQLconnection->error . '<b/>...';
         }
-        $result->close();
         return $array2return;
     }
 
@@ -325,43 +321,6 @@ class JsonBrain
         }
     }
 
-    /**
-     * builds the JSON output based on a given Label
-     *
-     * @param  type    $label
-     * @param  type    $prmtrs
-     * @return boolean
-     */
-    protected function gate2transmit($label, $prmtrs = null)
-    {
-        if (method_exists($this, $label)) {
-            if (is_null($prmtrs)) {
-                $aRreturn = call_user_func([$this, $label]);
-            } else {
-                if (is_array($prmtrs)) {
-                    $aRreturn = call_user_func_array([$this, $label], [$prmtrs]);
-                } else {
-                    $aRreturn = call_user_func([$this, $label], $prmtrs);
-                }
-            }
-            if (isset($_REQUEST['Readable'])) {
-                echo '<pre>';
-                print_r($result);
-                echo '</pre>';
-            } else {
-                $this->setHeaderGZiped();
-                $this->setHeaderNoCache('application/json');
-                echo $this->setArray2json($aRreturn);
-                $this->setFooterGZiped();
-            }
-        } else {
-            echo '<span style="background-color:red;color:white;">'
-            . 'Functie necunoscuta in `' . __FILE__ . '`!'
-            . PHP_EOL . '(cea cautata este `' . $label . '`)</span>';
-            return '';
-        }
-    }
-
     private function getAcceptFomrUserAgent()
     {
         $sReturn           = [];
@@ -432,7 +391,7 @@ class JsonBrain
                     $isX64 = true;
                 } elseif (strpos($userAgent, 'x64;')) {
                     $isX64 = true;
-                } elseif (strpos(strtolower($userAgent, 'amd64'))) {
+                } elseif (strpos(strtolower($userAgent), 'amd64')) {
                     $isX64 = true;
                 } elseif (strpos($userAgent, 'WOW64')) {
                     $isX64 = true;
