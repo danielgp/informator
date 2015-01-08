@@ -344,24 +344,20 @@ class JsonBrain
                     $aRreturn = call_user_func([$this, $label], $prmtrs);
                 }
             }
-            if (version_compare(phpversion(), "5.4.0", ">=")) {
-                $sReturn = utf8_encode(json_encode($aRreturn, JSON_FORCE_OBJECT | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
-            } else {
-                $sReturn = json_encode($aRreturn);
-            }
             if (isset($_REQUEST['Readable'])) {
-                $result = (json_decode($sReturn, true));
                 echo '<pre>';
                 print_r($result);
                 echo '</pre>';
             } else {
                 $this->setHeaderGZiped();
                 $this->setHeaderNoCache('application/json');
-                echo $sReturn;
+                echo $this->setArray2json($aRreturn);
                 $this->setFooterGZiped();
             }
         } else {
-            echo '<span style="background-color:red;color:white;">Functie necunoscuta in `' . __FILE__ . '`!' . PHP_EOL . '(cea cautata este `' . $label . '`)</span>';
+            echo '<span style="background-color:red;color:white;">'
+            . 'Functie necunoscuta in `' . __FILE__ . '`!'
+            . PHP_EOL . '(cea cautata este `' . $label . '`)</span>';
             return '';
         }
     }

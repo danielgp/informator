@@ -1,7 +1,6 @@
 {
     "name": "danielgp/informator",
     "description": "Informations about environment served via web",
-    "time": "2015-01-05 17:35:00",
     "type": "library",
     "license": "MIT",
     "authors": [

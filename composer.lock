@@ -4,20 +4,20 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "bcd1144de0e3a344ff0a9aef7a3d6ef6",
+    "hash": "af6f588b6ea2155f0bcf530d1427b5e8",
     "packages": [
         {
             "name": "danielgp/common-lib",
-            "version": "1.1.7",
+            "version": "1.1.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielgp/common-lib.git",
-                "reference": "c351326054092d21d7a7f0865686713a4b8536f0"
+                "reference": "b9b17185e27fb9b5d52a6bbd0ac161a58cf5ecde"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielgp/common-lib/zipball/c351326054092d21d7a7f0865686713a4b8536f0",
-                "reference": "c351326054092d21d7a7f0865686713a4b8536f0",
+                "url": "https://api.github.com/repos/danielgp/common-lib/zipball/b9b17185e27fb9b5d52a6bbd0ac161a58cf5ecde",
+                "reference": "b9b17185e27fb9b5d52a6bbd0ac161a58cf5ecde",
                 "shasum": ""
             },
             "require": {
@@ -43,7 +43,7 @@
                 }
             ],
             "description": "Common functions to be used where needed",
-            "time": "2015-01-07 15:23:08"
+            "time": "2015-01-08 16:43:14"
         },
         {
             "name": "mustangostang/spyc",
