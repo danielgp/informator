@@ -38,7 +38,6 @@ class JsonBrain
 
     public function __construct()
     {
-        $sReturn = null;
         if (isset($_REQUEST['Label'])) {
             $knownLabels = [
                 'ApacheInfo'           => $this->getApacheDetails(),
@@ -426,7 +425,6 @@ class JsonBrain
                 'Bot' => $dd->getBot(),
             ];
         } else {
-            $br                   = [];
             $http_accept_language = isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : '';
             preg_match_all('/([a-z]{2})(?:-[a-zA-Z]{2})?/', $http_accept_language, $m);
             $browserInformation   = array_merge($dd->getClient(), [
