@@ -273,7 +273,7 @@ class Informator extends AppQueries
         ];
     }
 
-    final protected function connectToMySql()
+    protected function connectToMySql()
     {
         if (is_null($this->mySQLconnection)) {
             $mySQLconfig           = [
