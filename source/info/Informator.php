@@ -28,7 +28,7 @@
 
 namespace danielgp\informator;
 
-class JsonBrain extends AppQueries
+class Informator extends AppQueries
 {
 
     use \danielgp\common_lib\CommonCode;
@@ -38,31 +38,41 @@ class JsonBrain extends AppQueries
 
     public function __construct()
     {
+        $knownLabels = [
+            'ApacheInfo'           => $this->getApacheDetails(),
+            'ClientInfo'           => $this->getClientBrowserDetails(),
+            'ListOfFiles'          => $this->getListOfFiles(realpath('.')),
+            'MySQLactiveDatabases' => $this->getMySQLactiveDatabases(),
+            'MySQLactiveEngines'   => $this->getMySQLactiveEngines(),
+            'MySQLgenericInfo'     => $this->getMySQLgenericInformations(),
+            'MySQLglobalVariables' => $this->getMySQLglobalVariables(),
+            'MySQLinfo'            => $this->getMySQLinfo(),
+            'PhpInfo'              => $this->getPhpDetails(),
+            'ServerInfo'           => $this->getServerDetails(),
+            'TomcatInfo'           => $this->getTomcatDetails(),
+            'SysInfo'              => $this->systemInfo(),
+        ];
+        $keysArray   = array_keys($knownLabels);
         if (isset($_REQUEST['Label'])) {
-            $knownLabels = [
-                'ApacheInfo'           => $this->getApacheDetails(),
-                'ClientInfo'           => $this->getClientBrowserDetails(),
-                'ListOfFiles'          => $this->getListOfFiles(realpath('.')),
-                'MySQLactiveDatabases' => $this->getMySQLactiveDatabases(),
-                'MySQLactiveEngines'   => $this->getMySQLactiveEngines(),
-                'MySQLgenericInfo'     => $this->getMySQLgenericInformations(),
-                'MySQLglobalVariables' => $this->getMySQLglobalVariables(),
-                'MySQLinfo'            => $this->getMySQLinfo(),
-                'PhpInfo'              => $this->getPhpDetails(),
-                'ServerInfo'           => $this->getServerDetails(),
-                'TomcatInfo'           => $this->getTomcatDetails(),
-                'SysInfo'              => $this->systemInfo(),
-            ];
-            if (in_array($_REQUEST['Label'], array_keys($knownLabels))) {
+            if (in_array($_REQUEST['Label'], $keysArray)) {
                 $this->setHeaderGZiped();
                 $this->setHeaderNoCache('application/json');
                 echo $this->setArray2json($knownLabels[$_REQUEST['Label']]);
                 $this->setFooterGZiped();
+                $showLabels = false;
             } else {
-                echo '<span style="background-color:red;color:white;">Unknown Label... :-(</span>';
+                echo '<span style="background-color:red;color:white;">There is no valid label transmited...';
+                $showLabels = true;
             }
         } else {
-            echo '<span style="background-color:red;color:white;">Label not set... :-(</span>';
+            echo '<span style="background-color:red;color:white;">Label not set...';
+            $showLabels = true;
+        }
+        if ($showLabels) {
+            echo 'So you might want to choose one from the list below:</span>';
+            foreach ($keysArray as $value) {
+                echo '<br/><a href="?Label=' . $value . '" target="_blank">' . $value . '</a>';
+            }
         }
     }
 
@@ -391,38 +401,48 @@ class JsonBrain extends AppQueries
             $userAgent = $_SERVER['HTTP_USER_AGENT'];
         }
         $dd = new \DeviceDetector\DeviceDetector($userAgent);
+        if (isset($_GET['ua'])) {
+            $userAgent = $_GET['ua'];
+        } else {
+            $userAgent = $_SERVER['HTTP_USER_AGENT'];
+        }
         $dd->discardBotInformation();
         $dd->parse();
         if ($dd->isBot()) {
-            // handle bots,spiders,crawlers,...
             return [
-                'Bot' => $dd->getBot(),
+                'Bot' => $dd->getBot(), // handle bots,spiders,crawlers,...
             ];
         } else {
             $http_accept_language = isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : '';
             preg_match_all('/([a-z]{2})(?:-[a-zA-Z]{2})?/', $http_accept_language, $m);
+            $br                   = new \DeviceDetector\Parser\Client\Browser();
+            $browserFamily        = $br->getBrowserFamily($dd->getClient('short_name'));
             $browserInformation   = array_merge($dd->getClient(), [
                 'architecture'        => $this->getArchitectureFromUserAgent($userAgent, 'browser'),
                 'connection'          => $_SERVER['HTTP_CONNECTION'],
+                'family'              => ($browserFamily !== false ? $browserFamily : 'Unknown'),
                 'host'                => $_SERVER['HTTP_HOST'],
                 'preferred locale'    => $m[0],
                 'preferred languages' => array_values(array_unique(array_values($m[1]))),
                 'referrer'            => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : ''),
-                'user_agent'          => $_SERVER['HTTP_USER_AGENT'],
+                'user_agent'          => $dd->getUserAgent(),
                 ], $this->getAcceptFomrUserAgent());
             ksort($browserInformation);
+            $os                   = new \DeviceDetector\Parser\OperatingSystem();
+            $osFamily             = $os->getOsFamily($dd->getOs('short_name'));
             $osInfo               = array_merge($dd->getOs(), [
-                'architecture' => $this->getArchitectureFromUserAgent($userAgent, 'os')
+                'architecture' => $this->getArchitectureFromUserAgent($userAgent, 'os'),
+                'family'       => ($osFamily !== false ? $osFamily : 'Unknown')
             ]);
             ksort($osInfo);
             return [
                 'Browser' => $browserInformation,
                 'Device'  => [
-                    'brand'     => $dd->getDevice(),
+                    'brand'     => $dd->getDeviceName(),
                     'ip'        => $this->getClientRealIpAddress(),
                     'ip direct' => $_SERVER['REMOTE_ADDR'],
                     'model'     => $dd->getModel(),
-                    'name'      => $dd->getBrand(),
+                    'name'      => $dd->getBrandName(),
                 ],
                 'OS'      => $osInfo,
             ];

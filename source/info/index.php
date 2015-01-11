@@ -28,4 +28,4 @@
 require_once 'MySQL.credentials.config.inc.php';
 require_once '../../vendor/autoload.php';
 
-$app = new \danielgp\informator\JsonBrain();
+$app = new \danielgp\informator\Informator();
