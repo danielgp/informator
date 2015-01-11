@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "35f9bfae5c1742a0440a77e23c20c9f9",
+    "hash": "0c161add739bd3f6b5b360f349af8b78",
     "packages": [
         {
             "name": "danielgp/common-lib",
@@ -94,16 +94,16 @@
         },
         {
             "name": "piwik/device-detector",
-            "version": "2.8.1",
+            "version": "2.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/piwik/device-detector.git",
-                "reference": "adf8f5b775273f9d2ffb6203ca04d629c9791019"
+                "reference": "228a3b3ea17b67305a972b4e00c25f0926d3e016"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/piwik/device-detector/zipball/adf8f5b775273f9d2ffb6203ca04d629c9791019",
-                "reference": "adf8f5b775273f9d2ffb6203ca04d629c9791019",
+                "url": "https://api.github.com/repos/piwik/device-detector/zipball/228a3b3ea17b67305a972b4e00c25f0926d3e016",
+                "reference": "228a3b3ea17b67305a972b4e00c25f0926d3e016",
                 "shasum": ""
             },
             "require": {
@@ -137,7 +137,7 @@
                 "parser",
                 "useragent"
             ],
-            "time": "2015-01-09 20:24:08"
+            "time": "2015-01-01 16:13:46"
         }
     ],
     "packages-dev": [],
