@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "danielgp/common-lib",
-            "version": "1.1.11",
+            "version": "1.1.11.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielgp/common-lib.git",
-                "reference": "692fb760252042c8fc06c134287ddda5d8a020ad"
+                "reference": "a04d08bc9ff23386a5b81da6b3633c0361041ef3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielgp/common-lib/zipball/692fb760252042c8fc06c134287ddda5d8a020ad",
-                "reference": "692fb760252042c8fc06c134287ddda5d8a020ad",
+                "url": "https://api.github.com/repos/danielgp/common-lib/zipball/a04d08bc9ff23386a5b81da6b3633c0361041ef3",
+                "reference": "a04d08bc9ff23386a5b81da6b3633c0361041ef3",
                 "shasum": ""
             },
             "require": {
@@ -44,7 +44,7 @@
                 }
             ],
             "description": "Common functions to be used where needed",
-            "time": "2015-01-20 20:18:01"
+            "time": "2015-01-20 20:37:55"
         },
         {
             "name": "mustangostang/spyc",

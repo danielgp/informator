@@ -33,8 +33,13 @@ namespace danielgp\informator;
  *
  * @author Popiniuc Daniel-Gheorghe
  */
-class AppQueries
+class AppQueries extends \danielgp\common_lib\CommonCode
 {
+
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
     protected function sActiveDatabases()
     {
