@@ -31,9 +31,10 @@ namespace danielgp\informator;
 class Informator extends AppQueries
 {
 
+    use \danielgp\common_lib\CommonCode;
+
     public function __construct()
     {
-        parent::__construct();
         $knownLabels = [
             'ApacheInfo'           => $this->getApacheDetails(),
             'ClientInfo'           => $this->getClientBrowserDetails(),

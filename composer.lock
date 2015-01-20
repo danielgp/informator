@@ -4,24 +4,25 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0c161add739bd3f6b5b360f349af8b78",
+    "hash": "ff36a03c0834157b0bb33e156819d4bb",
     "packages": [
         {
             "name": "danielgp/common-lib",
-            "version": "1.1.11.1",
+            "version": "1.1.12.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielgp/common-lib.git",
-                "reference": "a04d08bc9ff23386a5b81da6b3633c0361041ef3"
+                "reference": "8fc42ec60cff573121f630381dbfffe8fc0deb24"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielgp/common-lib/zipball/a04d08bc9ff23386a5b81da6b3633c0361041ef3",
-                "reference": "a04d08bc9ff23386a5b81da6b3633c0361041ef3",
+                "url": "https://api.github.com/repos/danielgp/common-lib/zipball/8fc42ec60cff573121f630381dbfffe8fc0deb24",
+                "reference": "8fc42ec60cff573121f630381dbfffe8fc0deb24",
                 "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
+                "inetsys/phpgettext": ">=1.0.11",
                 "php": ">=5.4"
             },
             "type": "library",
@@ -44,7 +45,55 @@
                 }
             ],
             "description": "Common functions to be used where needed",
-            "time": "2015-01-20 20:37:55"
+            "time": "2015-01-20 21:17:10"
+        },
+        {
+            "name": "inetsys/phpgettext",
+            "version": "1.0.11",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/inetsys/phpgettext.git",
+                "reference": "cc8b5b65b8392ef4efe73705d2bde7bc114649e1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/inetsys/phpgettext/zipball/cc8b5b65b8392ef4efe73705d2bde7bc114649e1",
+                "reference": "cc8b5b65b8392ef4efe73705d2bde7bc114649e1",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.0.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "gettext.php",
+                    "streams.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GNU GPL v2"
+            ],
+            "authors": [
+                {
+                    "name": "Danilo Segan",
+                    "homepage": "https://launchpad.net/php-gettext/",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Pablo Banderas",
+                    "homepage": "http://www.inetsys.es/",
+                    "role": "Wrapper"
+                }
+            ],
+            "description": "PHP implementation of gettext",
+            "homepage": "https://github.com/inetsys/phpgettext",
+            "keywords": [
+                "gettext",
+                "phpgettext"
+            ],
+            "time": "2014-02-07 10:24:48"
         },
         {
             "name": "mustangostang/spyc",
