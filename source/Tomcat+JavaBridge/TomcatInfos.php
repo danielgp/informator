@@ -26,6 +26,7 @@
  *
  */
 require_once 'java/Java.inc';
+require_once 'vendor/danielgp/common-lib/MySQLiByDanielGP.php';
 require_once 'vendor/danielgp/common-lib/RomanianHolidays.php';
 require_once 'vendor/danielgp/common-lib/CommonCode.php';
 require_once 'TomcatDetection.php';
