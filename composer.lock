@@ -8,21 +8,20 @@
     "packages": [
         {
             "name": "danielgp/common-lib",
-            "version": "1.1.12.3",
+            "version": "1.1.17.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielgp/common-lib.git",
-                "reference": "8fc42ec60cff573121f630381dbfffe8fc0deb24"
+                "reference": "0f9842c2196281999ed193e2d4976e7bcf84e047"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielgp/common-lib/zipball/8fc42ec60cff573121f630381dbfffe8fc0deb24",
-                "reference": "8fc42ec60cff573121f630381dbfffe8fc0deb24",
+                "url": "https://api.github.com/repos/danielgp/common-lib/zipball/0f9842c2196281999ed193e2d4976e7bcf84e047",
+                "reference": "0f9842c2196281999ed193e2d4976e7bcf84e047",
                 "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
-                "inetsys/phpgettext": ">=1.0.11",
                 "php": ">=5.4"
             },
             "type": "library",
@@ -45,7 +44,7 @@
                 }
             ],
             "description": "Common functions to be used where needed",
-            "time": "2015-01-20 21:17:10"
+            "time": "2015-01-30 16:04:17"
         },
         {
             "name": "inetsys/phpgettext",

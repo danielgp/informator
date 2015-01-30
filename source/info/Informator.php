@@ -88,7 +88,7 @@ class Informator extends AppQueries
             . '(with function `' . __FUNCTION__ . '`)...</p>';
             return null;
         } else {
-            $line = $this->setMySQLquery2Server($this->sActiveDatabases(), 'full_array_key_numbered')['result'];
+            $line = $this->setMySQLquery2Server($this->sActiveDatabases(), 'array_first_key_rest_values')['result'];
         }
         return $line;
     }
@@ -108,7 +108,7 @@ class Informator extends AppQueries
             . '(with function `' . __FUNCTION__ . '`)...</p>';
             return null;
         } else {
-            $line = $this->setMySQLquery2Server($this->sActiveEngines(), 'full_array_key_numbered')['result'];
+            $line = $this->setMySQLquery2Server($this->sActiveEngines(), 'array_first_key_rest_values')['result'];
         }
         return $line;
     }
@@ -163,10 +163,10 @@ class Informator extends AppQueries
     private function getPhpDetails()
     {
         $sInfo['PHP']                        = ini_get_all(null, false);
-        $sInfo['PHP']['Loaded extensions']   = get_loaded_extensions();
-        $sInfo['PHP']['Stream Filters']      = stream_get_filters();
-        $sInfo['PHP']['Stream Transports']   = stream_get_transports();
-        $sInfo['PHP']['Stream Wrappers']     = stream_get_wrappers();
+        $sInfo['PHP']['Loaded extensions']   = $this->setArrayValuesAsKey(get_loaded_extensions());
+        $sInfo['PHP']['Stream Filters']      = $this->setArrayValuesAsKey(stream_get_filters());
+        $sInfo['PHP']['Stream Transports']   = $this->setArrayValuesAsKey(stream_get_transports());
+        $sInfo['PHP']['Stream Wrappers']     = $this->setArrayValuesAsKey(stream_get_wrappers());
         $sInfo['PHP']['Version']             = phpversion();
         $sInfo['PHP']['Zend engine version'] = zend_version();
         ksort($sInfo['PHP']);
