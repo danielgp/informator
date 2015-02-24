@@ -16,7 +16,8 @@
         "ext-mysqli": "*",
         "inetsys/phpgettext":">=1.0.11",
         "danielgp/common-lib": ">=1.0.6",
-        "piwik/device-detector": "2.8.0"
+        "piwik/device-detector": ">=2.8.0",
+		"doctrine/cache": "*"
     },
     "autoload": {
         "psr-4": {

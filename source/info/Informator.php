@@ -57,18 +57,24 @@ class Informator extends AppQueries
                 $this->setFooterGZiped();
                 $showLabels = false;
             } else {
-                echo '<span style="background-color:red;color:white;">There is no valid label transmited...';
+                $feedback   = '<span style="background-color:red;color:white;">There is no valid label transmited...';
                 $showLabels = true;
             }
         } else {
-            echo '<span style="background-color:red;color:white;">Label not set...';
+            $feedback   = '<span style="background-color:red;color:white;">Label not set...';
             $showLabels = true;
         }
         if ($showLabels) {
-            echo 'So you might want to choose one from the list below:</span>';
+            echo $this->setHeaderCommon([
+                'lang'  => 'en-US',
+                'title' => 'Informator'
+            ]);
+            echo $feedback . 'So you might want to choose one from the list below:</span>';
             foreach ($keysArray as $value) {
-                echo '<br/><a href="?Label=' . $value . '" target="_blank">' . $value . '</a>';
+                echo '<br/>'
+                . '<a href="?Label=' . $value . '" target="_blank">' . $value . '</a>';
             }
+            echo $this->setFooterCommon();
         }
     }
 
@@ -340,11 +346,7 @@ class Informator extends AppQueries
             $userAgent = $_SERVER['HTTP_USER_AGENT'];
         }
         $dd = new \DeviceDetector\DeviceDetector($userAgent);
-        if (isset($_GET['ua'])) {
-            $userAgent = $_GET['ua'];
-        } else {
-            $userAgent = $_SERVER['HTTP_USER_AGENT'];
-        }
+        $dd->setCache(new \Doctrine\Common\Cache\PhpFileCache('../../tmp/'));
         $dd->discardBotInformation();
         $dd->parse();
         if ($dd->isBot()) {
