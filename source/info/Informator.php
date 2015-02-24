@@ -45,8 +45,8 @@ class Informator extends AppQueries
             'MySQLinfo'            => $this->getMySQLinfo(),
             'PhpInfo'              => $this->getPhpDetails(),
             'ServerInfo'           => $this->getServerDetails(),
-            'TomcatInfo'           => $this->getTomcatDetails(),
             'SysInfo'              => $this->systemInfo(),
+            'TomcatInfo'           => $this->getTomcatDetails(),
         ];
         $keysArray   = array_keys($knownLabels);
         if (isset($_REQUEST['Label'])) {
@@ -160,7 +160,6 @@ class Informator extends AppQueries
         $sInfo                             = [];
         $sInfo['MySQL']                    = $this->getMySQLgenericInformations();
         $sInfo['MySQL']['Engines']         = $this->getMySQLactiveEngines();
-        $sInfo['MySQL']['Databases']       = $this->getMySQLactiveDatabases();
         $sInfo['MySQL']['GlobalVariables'] = $this->getMySQLglobalVariables();
         ksort($sInfo['MySQL']);
         return $sInfo['MySQL'];
