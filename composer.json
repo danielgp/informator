@@ -15,8 +15,8 @@
         "ext-curl": "*",
         "ext-mysqli": "*",
         "inetsys/phpgettext":">=1.0.11",
-        "danielgp/common-lib": ">=1.0.6",
-        "piwik/device-detector": ">=2.8.0",
+        "danielgp/common-lib": "*",
+        "piwik/device-detector": "*",
 		"doctrine/cache": "*"
     },
     "autoload": {
@@ -26,7 +26,6 @@
             "DeviceDetector\\" : "vendor/piwik/device-detector/"
         },
         "classmap": [
-            "source/info/AppQueries.php",
             "source/info/Informator.php"
         ]
     },

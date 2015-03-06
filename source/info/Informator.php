@@ -28,7 +28,7 @@
 
 namespace danielgp\informator;
 
-class Informator extends AppQueries
+class Informator
 {
 
     use \danielgp\common_lib\CommonCode;
@@ -53,6 +53,9 @@ class Informator extends AppQueries
             if (in_array($_REQUEST['Label'], $keysArray)) {
                 $this->setHeaderGZiped();
                 $this->setHeaderNoCache('application/json');
+                if (substr($_REQUEST['Label'], 0, 5) == 'MySQL') {
+                    $this->connectToMySqlServer();
+                }
                 echo $this->setArray2json($knownLabels[$_REQUEST['Label']]);
                 $this->setFooterGZiped();
                 $showLabels = false;
@@ -76,83 +79,6 @@ class Informator extends AppQueries
             }
             echo $this->setFooterCommon();
         }
-    }
-
-    /**
-     * returns a list of MySQL databases (except the system ones)
-     *
-     * @param  boolean $full
-     * @return array
-     */
-    private function getMySQLactiveDatabases()
-    {
-        $this->connectToMySqlServer();
-        if (is_null($this->mySQLconnection)) {
-            echo '<p style="color:red;">'
-            . 'There is no connection to MySQL server, '
-            . 'therefore I cannot asses the MySQL active user databases '
-            . '(with function `' . __FUNCTION__ . '`)...</p>';
-            return null;
-        } else {
-            $line = $this->setMySQLquery2Server($this->sActiveDatabases(), 'array_first_key_rest_values')['result'];
-        }
-        return $line;
-    }
-
-    /**
-     * returns a list of MySQL engines |(except the system ones)
-     *
-     * @return array
-     */
-    private function getMySQLactiveEngines()
-    {
-        $this->connectToMySqlServer();
-        if (is_null($this->mySQLconnection)) {
-            echo '<p style="color:red;">'
-            . 'There is no connection to MySQL server, '
-            . 'therefore I cannot asses the MySQL active engines '
-            . '(with function `' . __FUNCTION__ . '`)...</p>';
-            return null;
-        } else {
-            $line = $this->setMySQLquery2Server($this->sActiveEngines(), 'array_first_key_rest_values')['result'];
-        }
-        return $line;
-    }
-
-    private function getMySQLgenericInformations()
-    {
-        $this->connectToMySqlServer();
-        if (is_null($this->mySQLconnection)) {
-            echo '<p style="color:red;">'
-            . 'There is no connection to MySQL server, '
-            . 'therefore I cannot asses the MySQL global variable values '
-            . '(with function `' . __FUNCTION__ . '`)...</p>';
-            return null;
-        }
-        return [
-            'Info'    => $this->mySQLconnection->server_info,
-            'Version' => $this->mySQLconnection->server_version
-        ];
-    }
-
-    /**
-     * returns the list of all MySQL global variables
-     *
-     * @return array
-     */
-    private function getMySQLglobalVariables()
-    {
-        $this->connectToMySqlServer();
-        if (is_null($this->mySQLconnection)) {
-            echo '<p style="color:red;">'
-            . 'There is no connection to MySQL server, '
-            . 'therefore I cannot asses the MySQL global variable values '
-            . '(with function `' . __FUNCTION__ . '`)...</p>';
-            return null;
-        } else {
-            $line = $this->setMySQLquery2Server('SHOW GLOBAL VARIABLES;', 'array_key_value')['result'];
-        }
-        return $line;
     }
 
     private function getMySQLinfo()
@@ -180,25 +106,38 @@ class Informator extends AppQueries
 
     private function getServerDetails()
     {
-        switch (php_uname('m')) {
-            case 'AMD64':
-                $serverMachineType = 'x64 (64 bit)';
-                break;
-            case 'i386':
-                $serverMachineType = 'x86 (32 bit)';
-                break;
-            default:
-                $serverMachineType = php_uname('m');
-                break;
+        $serverMachineType = 'unknown';
+        if (function_exists('php_uname')) {
+            switch (php_uname('m')) {
+                case 'AMD64':
+                    $serverMachineType = 'x64 (64 bit)';
+                    break;
+                case 'i386':
+                    $serverMachineType = 'x86 (32 bit)';
+                    break;
+            }
+            $serverInfo = [
+                'name'    => php_uname('s'),
+                'host'    => php_uname('n'),
+                'release' => php_uname('r'),
+                'version' => php_uname('v'),
+            ];
+        } else {
+            $serverInfo = [
+                'name'    => 'undisclosed',
+                'host'    => $_SERVER['HTTP_HOST'],
+                'release' => 'undisclosed',
+                'version' => 'undisclosed',
+            ];
         }
         return [
             'OS Architecture' => $serverMachineType,
             'OS Date/time'    => date('Y-m-d H:i:s'),
             'OS Ip'           => $_SERVER['SERVER_ADDR'],
-            'OS Name'         => php_uname('s'),
-            'OS Host'         => php_uname('n'),
-            'OS Release'      => php_uname('r'),
-            'OS Version'      => php_uname('v'),
+            'OS Name'         => $serverInfo['name'],
+            'OS Host'         => $serverInfo['host'],
+            'OS Release'      => $serverInfo['release'],
+            'OS Version'      => $serverInfo['version'],
         ];
     }
 
