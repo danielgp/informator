@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "danielgp/common-lib",
-            "version": "1.2.8",
+            "version": "1.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielgp/common-lib.git",
-                "reference": "02edea2b885e9e5dbb4097dcc60540a8a38d0421"
+                "reference": "a96fcb4f55c7791865b4253627b1447929414693"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielgp/common-lib/zipball/02edea2b885e9e5dbb4097dcc60540a8a38d0421",
-                "reference": "02edea2b885e9e5dbb4097dcc60540a8a38d0421",
+                "url": "https://api.github.com/repos/danielgp/common-lib/zipball/a96fcb4f55c7791865b4253627b1447929414693",
+                "reference": "a96fcb4f55c7791865b4253627b1447929414693",
                 "shasum": ""
             },
             "require": {
@@ -30,6 +30,8 @@
             "autoload": {
                 "classmap": [
                     "CommonCode.php",
+                    "DomComponentsByDanielGP.php",
+                    "MySQLiByDanielGPqueries.php",
                     "MySQLiByDanielGP.php",
                     "RomanianHolidays.php"
                 ]
@@ -46,7 +48,7 @@
                 }
             ],
             "description": "Common functions to be used where needed",
-            "time": "2015-03-06 19:27:43"
+            "time": "2015-03-07 00:39:11"
         },
         {
             "name": "doctrine/cache",

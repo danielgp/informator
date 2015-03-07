@@ -35,6 +35,9 @@ class Informator
 
     public function __construct()
     {
+        if (substr($_REQUEST['Label'], 0, 5) == 'MySQL') {
+            $this->connectToMySqlServer();
+        }
         $knownLabels = [
             'ApacheInfo'           => $this->getApacheDetails(),
             'ClientInfo'           => $this->getClientBrowserDetails(),
@@ -53,9 +56,6 @@ class Informator
             if (in_array($_REQUEST['Label'], $keysArray)) {
                 $this->setHeaderGZiped();
                 $this->setHeaderNoCache('application/json');
-                if (substr($_REQUEST['Label'], 0, 5) == 'MySQL') {
-                    $this->connectToMySqlServer();
-                }
                 echo $this->setArray2json($knownLabels[$_REQUEST['Label']]);
                 $this->setFooterGZiped();
                 $showLabels = false;
