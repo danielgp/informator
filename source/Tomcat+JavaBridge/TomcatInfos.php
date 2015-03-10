@@ -26,6 +26,8 @@
  *
  */
 require_once 'java/Java.inc';
+require_once 'vendor/danielgp/common-lib/DomComponentsByDanielGP.php';
+require_once 'vendor/danielgp/common-lib/MySQLiByDanielGPqueries.php';
 require_once 'vendor/danielgp/common-lib/MySQLiByDanielGP.php';
 require_once 'vendor/danielgp/common-lib/RomanianHolidays.php';
 require_once 'vendor/danielgp/common-lib/CommonCode.php';
