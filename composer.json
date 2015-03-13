@@ -14,10 +14,9 @@
         "php": ">=5.4",
         "ext-curl": "*",
         "ext-mysqli": "*",
-        "inetsys/phpgettext":">=1.0.11",
         "danielgp/common-lib": "*",
         "piwik/device-detector": "*",
-		"doctrine/cache": "*"
+        "doctrine/cache": "*"
     },
     "autoload": {
         "psr-4": {
