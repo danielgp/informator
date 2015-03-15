@@ -113,7 +113,11 @@ class Informator
                     $serverMachineType = 'x64 (64 bit)';
                     break;
                 case 'i386':
+                case 'i586':
                     $serverMachineType = 'x86 (32 bit)';
+                    break;
+                default:
+                    $serverMachineType = php_uname('m');
                     break;
             }
             $serverInfo = [
@@ -131,6 +135,7 @@ class Informator
             ];
         }
         return [
+            'OS'              => php_uname(),
             'OS Architecture' => $serverMachineType,
             'OS Date/time'    => date('Y-m-d H:i:s'),
             'OS Ip'           => $_SERVER['SERVER_ADDR'],
@@ -150,7 +155,7 @@ class Informator
             $sReturn['Tomcat'] = $this->setJson2array($sInfo['Tomcat']);
             ksort($sReturn);
         } else {
-            $sReturn['Tomcat'] = ['-'];
+            $sReturn['Tomcat'] = null;
         }
         return $sReturn;
     }
