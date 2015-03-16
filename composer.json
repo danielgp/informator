@@ -31,6 +31,6 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "archive": {
-        "exclude": ["/nbproject", "/vendor", "/tests"]
+        "exclude": ["/nbproject", "/vendor", "/tests", "/tmp"]
     }
 }

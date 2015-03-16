@@ -139,6 +139,8 @@ class Informator
             'OS Architecture' => $serverMachineType,
             'OS Date/time'    => date('Y-m-d H:i:s'),
             'OS Ip'           => $_SERVER['SERVER_ADDR'],
+            'OS Ip type'      => $this->checkIpIsPrivate($_SERVER['SERVER_ADDR']),
+            'OS Ip v4/v6'     => $this->checkIpIsV4OrV6($_SERVER['SERVER_ADDR']),
             'OS Name'         => $serverInfo['name'],
             'OS Host'         => $serverInfo['host'],
             'OS Release'      => $serverInfo['release'],
@@ -319,12 +321,15 @@ class Informator
                 'family'       => ($osFamily !== false ? $osFamily : 'Unknown')
             ]);
             ksort($osInfo);
+            $clientIp             = $this->getClientRealIpAddress();
             return [
                 'Browser' => $browserInformation,
                 'Device'  => [
                     'brand'     => $dd->getDeviceName(),
-                    'ip'        => $this->getClientRealIpAddress(),
+                    'ip'        => $clientIp,
                     'ip direct' => $_SERVER['REMOTE_ADDR'],
+                    'ip type'   => $this->checkIpIsPrivate($clientIp),
+                    'ip v4/v6'  => $this->checkIpIsV4OrV6($clientIp),
                     'model'     => $dd->getModel(),
                     'name'      => $dd->getBrandName(),
                 ],
