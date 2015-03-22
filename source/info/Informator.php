@@ -39,18 +39,27 @@ class Informator
             $this->connectToMySqlServer();
         }
         $knownLabels = [
-            'ApacheInfo'           => $this->getApacheDetails(),
-            'ClientInfo'           => $this->getClientBrowserDetails(),
-            'MySQLactiveDatabases' => $this->getMySQLactiveDatabases(),
-            'MySQLactiveEngines'   => $this->getMySQLactiveEngines(),
-            'MySQLgenericInfo'     => $this->getMySQLgenericInformations(),
-            'MySQLglobalVariables' => $this->getMySQLglobalVariables(),
-            'MySQLinfo'            => $this->getMySQLinfo(),
-            'PhpInfo'              => $this->getPhpDetails(),
-            'ServerInfo'           => $this->getServerDetails(),
-            'SysInfo'              => $this->systemInfo(),
-            'TomcatInfo'           => $this->getTomcatDetails(),
+            'ApacheInfo'             => $this->getApacheDetails(),
+            'ClientInfo'             => $this->getClientBrowserDetails(),
+            'MySQL Databases All'    => $this->getMySQLinfo(['Databases All']),
+            'MySQL Databases Client' => $this->getMySQLinfo(['Databases Client']),
+            'MySQL Engines Active'   => $this->getMySQLinfo(['Engines Active']),
+            'MySQL Engines All'      => $this->getMySQLinfo(['Engines All']),
+            'MySQL General'          => $this->getMySQLinfo(['General']),
+            'MySQL Variables Global' => $this->getMySQLinfo(['Variables Global']),
+            'MySQL info'             => $this->getMySQLinfo(['Engines Active', 'General', 'Variables Global']),
+            'Php Extensions Loaded'  => $this->getPhpDetails(['Extensions Loaded']),
+            'Php General'            => $this->getPhpDetails(['General']),
+            'Php INI Settings'       => $this->getPhpDetails(['INI Settings']),
+            'Php Stream Filters'     => $this->getPhpDetails(['Stream Filters']),
+            'Php Stream Transports'  => $this->getPhpDetails(['Stream Transports']),
+            'Php Stream Wrappers'    => $this->getPhpDetails(['Stream Wrappers']),
+            'Php info'               => $this->getPhpDetails(['General', 'INI Settings', 'Extensions Loaded']),
+            'ServerInfo'             => $this->getServerDetails(),
+            'SysInfo'                => $this->systemInfo(),
+            'TomcatInfo'             => $this->getTomcatDetails(),
         ];
+        ksort($knownLabels);
         $keysArray   = array_keys($knownLabels);
         if (isset($_REQUEST['Label'])) {
             if (in_array($_REQUEST['Label'], $keysArray)) {
@@ -75,31 +84,69 @@ class Informator
             echo $feedback . 'So you might want to choose one from the list below:</span>';
             foreach ($keysArray as $value) {
                 echo '<br/>'
-                . '<a href="?Label=' . $value . '" target="_blank">' . $value . '</a>';
+                . '<a href="?Label=' . urlencode($value) . '" target="_blank">' . $value . '</a>';
             }
             echo $this->setFooterCommon();
         }
     }
 
-    private function getMySQLinfo()
+    private function getMySQLinfo($returnType = ['Engines Active', 'General', 'Variables Global'])
     {
-        $sInfo                             = [];
-        $sInfo['MySQL']                    = $this->getMySQLgenericInformations();
-        $sInfo['MySQL']['Engines']         = $this->getMySQLactiveEngines();
-        $sInfo['MySQL']['GlobalVariables'] = $this->getMySQLglobalVariables();
+        $sInfo = [];
+        foreach ($returnType as $value) {
+            switch ($value) {
+                case 'Databases All':
+                    $sInfo['MySQL']['Engines All']      = $this->getMySQLactiveDatabases(false);
+                    break;
+                case 'Databases Client':
+                    $sInfo['MySQL']['Engines Client']   = $this->getMySQLactiveDatabases(true);
+                    break;
+                case 'Engines Active':
+                    $sInfo['MySQL']['Engines Active']   = $this->getMySQLactiveEngines(true);
+                    break;
+                case 'Engines All':
+                    $sInfo['MySQL']['Engines All']      = $this->getMySQLactiveEngines(false);
+                    break;
+                case 'General':
+                    $sInfo['MySQL']['General']          = $this->getMySQLgenericInformations();
+                    break;
+                case 'Variables Global':
+                    $sInfo['MySQL']['Variables Global'] = $this->getMySQLglobalVariables();
+                    break;
+            }
+        }
         ksort($sInfo['MySQL']);
         return $sInfo['MySQL'];
     }
 
-    private function getPhpDetails()
+    private function getPhpDetails($returnType = ['General', 'INI Settings', 'Extensions Loaded'])
     {
-        $sInfo['PHP']                        = ini_get_all(null, false);
-        $sInfo['PHP']['Loaded extensions']   = $this->setArrayValuesAsKey(get_loaded_extensions());
-        $sInfo['PHP']['Stream Filters']      = $this->setArrayValuesAsKey(stream_get_filters());
-        $sInfo['PHP']['Stream Transports']   = $this->setArrayValuesAsKey(stream_get_transports());
-        $sInfo['PHP']['Stream Wrappers']     = $this->setArrayValuesAsKey(stream_get_wrappers());
-        $sInfo['PHP']['Version']             = phpversion();
-        $sInfo['PHP']['Zend engine version'] = zend_version();
+        $sInfo = [];
+        foreach ($returnType as $value) {
+            switch ($value) {
+                case 'Extensions Loaded':
+                    $sInfo['PHP'][$value] = $this->setArrayValuesAsKey(get_loaded_extensions());
+                    break;
+                case 'General':
+                    $sInfo['PHP'][$value] = [
+                        'Version'             => phpversion(),
+                        'Zend Engine Version' => zend_version(),
+                    ];
+                    break;
+                case 'INI Settings':
+                    $sInfo['PHP'][$value] = ini_get_all(null, false);
+                    break;
+                case 'Stream Filters':
+                    $sInfo['PHP'][$value] = $this->setArrayValuesAsKey(stream_get_filters());
+                    break;
+                case 'Stream Transports':
+                    $sInfo['PHP'][$value] = $this->setArrayValuesAsKey(stream_get_transports());
+                    break;
+                case 'Stream Wrappers':
+                    $sInfo['PHP'][$value] = $this->setArrayValuesAsKey(stream_get_wrappers());
+                    break;
+            }
+        }
         ksort($sInfo['PHP']);
         return $sInfo['PHP'];
     }

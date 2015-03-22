@@ -4,20 +4,20 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d221c6623189577d9b846a3395e1db9f",
+    "hash": "08ad7b2491dd1e03001dede58cef16c4",
     "packages": [
         {
             "name": "danielgp/common-lib",
-            "version": "1.4.3",
+            "version": "1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielgp/common-lib.git",
-                "reference": "5846af286e041a0fc0c75add2a4407f5b4c6d474"
+                "reference": "00d94b00dc459e5aaba7f94caab501a7317ad1d8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielgp/common-lib/zipball/5846af286e041a0fc0c75add2a4407f5b4c6d474",
-                "reference": "5846af286e041a0fc0c75add2a4407f5b4c6d474",
+                "url": "https://api.github.com/repos/danielgp/common-lib/zipball/00d94b00dc459e5aaba7f94caab501a7317ad1d8",
+                "reference": "00d94b00dc459e5aaba7f94caab501a7317ad1d8",
                 "shasum": ""
             },
             "require": {
@@ -48,7 +48,7 @@
                 }
             ],
             "description": "Common functions to be used where needed",
-            "time": "2015-03-16 00:28:53"
+            "time": "2015-03-22 02:48:48"
         },
         {
             "name": "doctrine/cache",
