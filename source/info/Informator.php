@@ -96,16 +96,16 @@ class Informator
         foreach ($returnType as $value) {
             switch ($value) {
                 case 'Databases All':
-                    $sInfo['MySQL']['Engines All']      = $this->getMySQLactiveDatabases(false);
+                    $sInfo['MySQL']['Engines All']      = $this->getMySQLlistDatabases(false);
                     break;
                 case 'Databases Client':
-                    $sInfo['MySQL']['Engines Client']   = $this->getMySQLactiveDatabases(true);
+                    $sInfo['MySQL']['Engines Client']   = $this->getMySQLlistDatabases(true);
                     break;
                 case 'Engines Active':
-                    $sInfo['MySQL']['Engines Active']   = $this->getMySQLactiveEngines(true);
+                    $sInfo['MySQL']['Engines Active']   = $this->getMySQLlistEngines(true);
                     break;
                 case 'Engines All':
-                    $sInfo['MySQL']['Engines All']      = $this->getMySQLactiveEngines(false);
+                    $sInfo['MySQL']['Engines All']      = $this->getMySQLlistEngines(false);
                     break;
                 case 'General':
                     $sInfo['MySQL']['General']          = $this->getMySQLgenericInformations();
