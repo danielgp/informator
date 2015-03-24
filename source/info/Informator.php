@@ -33,36 +33,45 @@ class Informator
 
     use \danielgp\common_lib\CommonCode;
 
+    private $knownLabels;
+
     public function __construct()
     {
-        $knownLabels = [
-            'ApacheInfo'             => $this->getApacheDetails(),
-            'ClientInfo'             => $this->getClientBrowserDetails(),
-            'MySQL Databases All'    => $this->getMySQLinfo(['Databases All']),
-            'MySQL Databases Client' => $this->getMySQLinfo(['Databases Client']),
-            'MySQL Engines Active'   => $this->getMySQLinfo(['Engines Active']),
-            'MySQL Engines All'      => $this->getMySQLinfo(['Engines All']),
-            'MySQL General'          => $this->getMySQLinfo(['General']),
-            'MySQL Variables Global' => $this->getMySQLinfo(['Variables Global']),
-            'MySQL info'             => $this->getMySQLinfo(['Engines Active', 'General', 'Variables Global']),
-            'Php Extensions Loaded'  => $this->getPhpDetails(['Extensions Loaded']),
-            'Php General'            => $this->getPhpDetails(['General']),
-            'Php INI Settings'       => $this->getPhpDetails(['INI Settings']),
-            'Php Stream Filters'     => $this->getPhpDetails(['Stream Filters']),
-            'Php Stream Transports'  => $this->getPhpDetails(['Stream Transports']),
-            'Php Stream Wrappers'    => $this->getPhpDetails(['Stream Wrappers']),
-            'Php info'               => $this->getPhpDetails(['General', 'INI Settings', 'Extensions Loaded']),
-            'ServerInfo'             => $this->getServerDetails(),
-            'SysInfo'                => $this->systemInfo(),
-            'TomcatInfo'             => $this->getTomcatDetails(),
+        $this->knownLabels = [
+            '--- List of known labels' => '',
+            'ApacheInfo'               => $this->getApacheDetails(),
+            'ClientInfo'               => $this->getClientBrowserDetails(),
+            'MySQL Databases All'      => $this->getMySQLinfo(['Databases All']),
+            'MySQL Databases Client'   => $this->getMySQLinfo(['Databases Client']),
+            'MySQL Engines Active'     => $this->getMySQLinfo(['Engines Active']),
+            'MySQL Engines All'        => $this->getMySQLinfo(['Engines All']),
+            'MySQL General'            => $this->getMySQLinfo(['General']),
+            'MySQL Variables Global'   => $this->getMySQLinfo(['Variables Global']),
+            'MySQL info'               => $this->getMySQLinfo(['Engines Active', 'General', 'Variables Global']),
+            'Php Extensions Loaded'    => $this->getPhpDetails(['Extensions Loaded']),
+            'Php General'              => $this->getPhpDetails(['General']),
+            'Php INI Settings'         => $this->getPhpDetails(['INI Settings']),
+            'Php Stream Filters'       => $this->getPhpDetails(['Stream Filters']),
+            'Php Stream Transports'    => $this->getPhpDetails(['Stream Transports']),
+            'Php Stream Wrappers'      => $this->getPhpDetails(['Stream Wrappers']),
+            'Php info'                 => $this->getPhpDetails(['General', 'INI Settings', 'Extensions Loaded']),
+            'ServerInfo'               => $this->getServerDetails(),
+            'SysInfo'                  => $this->systemInfo(),
+            'TomcatInfo'               => $this->getTomcatDetails(),
         ];
-        ksort($knownLabels);
-        $keysArray   = array_keys($knownLabels);
+        ksort($this->knownLabels);
+        $keysArray         = array_keys($this->knownLabels);
         if (isset($_REQUEST['Label'])) {
-            if (in_array($_REQUEST['Label'], $keysArray)) {
+            if ($_REQUEST['Label'] == '--- List of known labels') {
                 $this->setHeaderGZiped();
                 $this->setHeaderNoCache('application/json');
-                echo $this->setArray2json($knownLabels[$_REQUEST['Label']]);
+                echo $this->setArray2json($keysArray);
+                $this->setFooterGZiped();
+                $showLabels = false;
+            } elseif (in_array($_REQUEST['Label'], $keysArray)) {
+                $this->setHeaderGZiped();
+                $this->setHeaderNoCache('application/json');
+                echo $this->setArray2json($this->knownLabels[$_REQUEST['Label']]);
                 $this->setFooterGZiped();
                 $showLabels = false;
             } else {
