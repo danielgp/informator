@@ -35,9 +35,6 @@ class Informator
 
     public function __construct()
     {
-        if (substr($_REQUEST['Label'], 0, 5) == 'MySQL') {
-            $this->connectToMySqlServer();
-        }
         $knownLabels = [
             'ApacheInfo'             => $this->getApacheDetails(),
             'ClientInfo'             => $this->getClientBrowserDetails(),
@@ -88,143 +85,6 @@ class Informator
             }
             echo $this->setFooterCommon();
         }
-    }
-
-    private function getMySQLinfo($returnType = ['Engines Active', 'General', 'Variables Global'])
-    {
-        $sInfo = [];
-        foreach ($returnType as $value) {
-            switch ($value) {
-                case 'Databases All':
-                    $sInfo['MySQL']['Engines All']      = $this->getMySQLlistDatabases(false);
-                    break;
-                case 'Databases Client':
-                    $sInfo['MySQL']['Engines Client']   = $this->getMySQLlistDatabases(true);
-                    break;
-                case 'Engines Active':
-                    $sInfo['MySQL']['Engines Active']   = $this->getMySQLlistEngines(true);
-                    break;
-                case 'Engines All':
-                    $sInfo['MySQL']['Engines All']      = $this->getMySQLlistEngines(false);
-                    break;
-                case 'General':
-                    $sInfo['MySQL']['General']          = $this->getMySQLgenericInformations();
-                    break;
-                case 'Variables Global':
-                    $sInfo['MySQL']['Variables Global'] = $this->getMySQLglobalVariables();
-                    break;
-            }
-        }
-        ksort($sInfo['MySQL']);
-        return $sInfo['MySQL'];
-    }
-
-    private function getPhpDetails($returnType = ['General', 'INI Settings', 'Extensions Loaded'])
-    {
-        $sInfo = [];
-        foreach ($returnType as $value) {
-            switch ($value) {
-                case 'Extensions Loaded':
-                    $sInfo['PHP'][$value] = $this->setArrayValuesAsKey(get_loaded_extensions());
-                    break;
-                case 'General':
-                    $sInfo['PHP'][$value] = [
-                        'Version'             => phpversion(),
-                        'Zend Engine Version' => zend_version(),
-                    ];
-                    break;
-                case 'INI Settings':
-                    $sInfo['PHP'][$value] = ini_get_all(null, false);
-                    break;
-                case 'Stream Filters':
-                    $sInfo['PHP'][$value] = $this->setArrayValuesAsKey(stream_get_filters());
-                    break;
-                case 'Stream Transports':
-                    $sInfo['PHP'][$value] = $this->setArrayValuesAsKey(stream_get_transports());
-                    break;
-                case 'Stream Wrappers':
-                    $sInfo['PHP'][$value] = $this->setArrayValuesAsKey(stream_get_wrappers());
-                    break;
-            }
-        }
-        ksort($sInfo['PHP']);
-        return $sInfo['PHP'];
-    }
-
-    private function getServerDetails()
-    {
-        $serverMachineType = 'unknown';
-        if (function_exists('php_uname')) {
-            switch (php_uname('m')) {
-                case 'AMD64':
-                    $serverMachineType = 'x64 (64 bit)';
-                    break;
-                case 'i386':
-                case 'i586':
-                    $serverMachineType = 'x86 (32 bit)';
-                    break;
-                default:
-                    $serverMachineType = php_uname('m');
-                    break;
-            }
-            $serverInfo = [
-                'name'    => php_uname('s'),
-                'host'    => php_uname('n'),
-                'release' => php_uname('r'),
-                'version' => php_uname('v'),
-            ];
-        } else {
-            $serverInfo = [
-                'name'    => 'undisclosed',
-                'host'    => $_SERVER['HTTP_HOST'],
-                'release' => 'undisclosed',
-                'version' => 'undisclosed',
-            ];
-        }
-        return [
-            'OS'              => php_uname(),
-            'OS Architecture' => $serverMachineType,
-            'OS Date/time'    => date('Y-m-d H:i:s'),
-            'OS Ip'           => $_SERVER['SERVER_ADDR'],
-            'OS Ip type'      => $this->checkIpIsPrivate($_SERVER['SERVER_ADDR']),
-            'OS Ip v4/v6'     => $this->checkIpIsV4OrV6($_SERVER['SERVER_ADDR']),
-            'OS Name'         => $serverInfo['name'],
-            'OS Host'         => $serverInfo['host'],
-            'OS Release'      => $serverInfo['release'],
-            'OS Version'      => $serverInfo['version'],
-        ];
-    }
-
-    private function getTomcatDetails()
-    {
-        $url             = 'http://' . $_SERVER['SERVER_NAME'] . ':8080/JavaBridge/TomcatInfos.php';
-        $sInfo['Tomcat'] = $this->getContentFromUrlThroughCurl($url)['response'];
-        $sReturn         = '';
-        if ($this->isJson($sInfo['Tomcat'])) {
-            $sReturn['Tomcat'] = $this->setJson2array($sInfo['Tomcat']);
-            ksort($sReturn);
-        } else {
-            $sReturn['Tomcat'] = null;
-        }
-        return $sReturn;
-    }
-
-    /**
-     * Builds an array with most important key aspects of LAMP/WAMP
-     * @param  boolean $full
-     * @return array
-     */
-    protected function systemInfo()
-    {
-        return [
-            'Apache'          => $this->getApacheDetails(),
-            'Client'          => $this->getClientBrowserDetails(),
-            'InfoCompareFile' => $this->getFileDetails(__FILE__),
-            'MySQL'           => $this->getMySQLinfo(),
-            'PHP'             => $this->getPhpDetails(),
-            'Server'          => $this->getServerDetails(),
-            'Tomcat'          => $this->getTomcatDetails(),
-        ];
     }
 
     protected function connectToMySqlServer()
@@ -383,5 +243,143 @@ class Informator
                 'OS'      => $osInfo,
             ];
         }
+    }
+
+    private function getMySQLinfo($returnType = ['Engines Active', 'General', 'Variables Global'])
+    {
+        $this->connectToMySqlServer();
+        $sInfo = [];
+        foreach ($returnType as $value) {
+            switch ($value) {
+                case 'Databases All':
+                    $sInfo['MySQL']['Engines All']      = $this->getMySQLlistDatabases(false);
+                    break;
+                case 'Databases Client':
+                    $sInfo['MySQL']['Engines Client']   = $this->getMySQLlistDatabases(true);
+                    break;
+                case 'Engines Active':
+                    $sInfo['MySQL']['Engines Active']   = $this->getMySQLlistEngines(true);
+                    break;
+                case 'Engines All':
+                    $sInfo['MySQL']['Engines All']      = $this->getMySQLlistEngines(false);
+                    break;
+                case 'General':
+                    $sInfo['MySQL']['General']          = $this->getMySQLgenericInformations();
+                    break;
+                case 'Variables Global':
+                    $sInfo['MySQL']['Variables Global'] = $this->getMySQLglobalVariables();
+                    break;
+            }
+        }
+        ksort($sInfo['MySQL']);
+        return $sInfo['MySQL'];
+    }
+
+    private function getPhpDetails($returnType = ['General', 'INI Settings', 'Extensions Loaded'])
+    {
+        $sInfo = [];
+        foreach ($returnType as $value) {
+            switch ($value) {
+                case 'Extensions Loaded':
+                    $sInfo['PHP'][$value] = $this->setArrayValuesAsKey(get_loaded_extensions());
+                    break;
+                case 'General':
+                    $sInfo['PHP'][$value] = [
+                        'Version'             => phpversion(),
+                        'Zend Engine Version' => zend_version(),
+                    ];
+                    break;
+                case 'INI Settings':
+                    $sInfo['PHP'][$value] = ini_get_all(null, false);
+                    break;
+                case 'Stream Filters':
+                    $sInfo['PHP'][$value] = $this->setArrayValuesAsKey(stream_get_filters());
+                    break;
+                case 'Stream Transports':
+                    $sInfo['PHP'][$value] = $this->setArrayValuesAsKey(stream_get_transports());
+                    break;
+                case 'Stream Wrappers':
+                    $sInfo['PHP'][$value] = $this->setArrayValuesAsKey(stream_get_wrappers());
+                    break;
+            }
+        }
+        ksort($sInfo['PHP']);
+        return $sInfo['PHP'];
+    }
+
+    private function getServerDetails()
+    {
+        $serverMachineType = 'unknown';
+        if (function_exists('php_uname')) {
+            switch (php_uname('m')) {
+                case 'AMD64':
+                    $serverMachineType = 'x64 (64 bit)';
+                    break;
+                case 'i386':
+                case 'i586':
+                    $serverMachineType = 'x86 (32 bit)';
+                    break;
+                default:
+                    $serverMachineType = php_uname('m');
+                    break;
+            }
+            $serverInfo = [
+                'name'    => php_uname('s'),
+                'host'    => php_uname('n'),
+                'release' => php_uname('r'),
+                'version' => php_uname('v'),
+            ];
+        } else {
+            $serverInfo = [
+                'name'    => 'undisclosed',
+                'host'    => $_SERVER['HTTP_HOST'],
+                'release' => 'undisclosed',
+                'version' => 'undisclosed',
+            ];
+        }
+        return [
+            'OS'              => php_uname(),
+            'OS Architecture' => $serverMachineType,
+            'OS Date/time'    => date('Y-m-d H:i:s'),
+            'OS Ip'           => $_SERVER['SERVER_ADDR'],
+            'OS Ip type'      => $this->checkIpIsPrivate($_SERVER['SERVER_ADDR']),
+            'OS Ip v4/v6'     => $this->checkIpIsV4OrV6($_SERVER['SERVER_ADDR']),
+            'OS Name'         => $serverInfo['name'],
+            'OS Host'         => $serverInfo['host'],
+            'OS Release'      => $serverInfo['release'],
+            'OS Version'      => $serverInfo['version'],
+        ];
+    }
+
+    private function getTomcatDetails()
+    {
+        $url             = 'http://' . $_SERVER['SERVER_NAME'] . ':8080/JavaBridge/TomcatInfos.php';
+        $sInfo['Tomcat'] = $this->getContentFromUrlThroughCurl($url)['response'];
+        $sReturn         = '';
+        if ($this->isJson($sInfo['Tomcat'])) {
+            $sReturn['Tomcat'] = $this->setJson2array($sInfo['Tomcat']);
+            ksort($sReturn);
+        } else {
+            $sReturn['Tomcat'] = null;
+        }
+        return $sReturn;
+    }
+
+    /**
+     * Builds an array with most important key aspects of LAMP/WAMP
+     * @param  boolean $full
+     * @return array
+     */
+    protected function systemInfo()
+    {
+        return [
+//            'Apache'          => $this->getApacheDetails(),
+//            'Client'          => $this->getClientBrowserDetails(),
+//            'InfoCompareFile' => $this->getFileDetails(__FILE__),
+            'MySQL' => $this->getMySQLinfo(),
+//            'PHP'    => $this->getPhpDetails(),
+//            'Server' => $this->getServerDetails(),
+//            'Tomcat' => $this->getTomcatDetails()['Tomcat'],
+        ];
     }
 }
