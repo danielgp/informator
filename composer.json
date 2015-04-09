@@ -21,7 +21,7 @@
     "autoload": {
         "psr-4": {
             "": "source/info/",
-            "danielgp\\common_lib\\": "vendor/danielgp/common-lib/",
+            "danielgp\\common_lib\\source\\": "vendor/danielgp/common-lib/source/",
             "DeviceDetector\\" : "vendor/piwik/device-detector/"
         },
         "classmap": [

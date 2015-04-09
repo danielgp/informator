@@ -34,12 +34,16 @@ class Informator
     use \danielgp\common_lib\CommonCode;
 
     private $knownLabels;
+    private $composerLockFile;
 
     public function __construct()
     {
-        $this->knownLabels = [
+        $this->composerLockFile = realpath('../../') . DIRECTORY_SEPARATOR . 'composer.lock';
+        $this->knownLabels      = [
             '--- List of known labels' => '',
             'ApacheInfo'               => $this->getApacheDetails(),
+            'Auto Dependencies'        => $this->getPackageDetailsFromGivenComposerLockFile($this->composerLockFile),
+            'Auto Dependencies file'   => [$fileToRead],
             'ClientInfo'               => $this->getClientBrowserDetails(),
             'MySQL Databases All'      => $this->getMySQLinfo(['Databases All']),
             'MySQL Databases Client'   => $this->getMySQLinfo(['Databases Client']),
@@ -60,40 +64,7 @@ class Informator
             'TomcatInfo'               => $this->getTomcatDetails(),
         ];
         ksort($this->knownLabels);
-        $keysArray         = array_keys($this->knownLabels);
-        if (isset($_REQUEST['Label'])) {
-            if ($_REQUEST['Label'] == '--- List of known labels') {
-                $this->setHeaderGZiped();
-                $this->setHeaderNoCache('application/json');
-                echo $this->setArray2json($keysArray);
-                $this->setFooterGZiped();
-                $showLabels = false;
-            } elseif (in_array($_REQUEST['Label'], $keysArray)) {
-                $this->setHeaderGZiped();
-                $this->setHeaderNoCache('application/json');
-                echo $this->setArray2json($this->knownLabels[$_REQUEST['Label']]);
-                $this->setFooterGZiped();
-                $showLabels = false;
-            } else {
-                $feedback   = '<span style="background-color:red;color:white;">There is no valid label transmited...';
-                $showLabels = true;
-            }
-        } else {
-            $feedback   = '<span style="background-color:red;color:white;">Label not set...';
-            $showLabels = true;
-        }
-        if ($showLabels) {
-            echo $this->setHeaderCommon([
-                'lang'  => 'en-US',
-                'title' => 'Informator'
-            ]);
-            echo $feedback . 'So you might want to choose one from the list below:</span>';
-            foreach ($keysArray as $value) {
-                echo '<br/>'
-                . '<a href="?Label=' . urlencode($value) . '" target="_blank">' . $value . '</a>';
-            }
-            echo $this->setFooterCommon();
-        }
+        echo $this->setInterface();
     }
 
     protected function connectToMySqlServer()
@@ -374,6 +345,46 @@ class Informator
         return $sReturn;
     }
 
+    private function setInterface()
+    {
+        $sReturn   = [];
+        $keysArray = array_keys($this->knownLabels);
+        if (isset($_REQUEST['Label'])) {
+            if ($_REQUEST['Label'] == '--- List of known labels') {
+                $this->setHeaderGZiped();
+                $this->setHeaderNoCache('application/json');
+                echo $this->setArray2json($keysArray);
+                $this->setFooterGZiped();
+                $showLabels = false;
+            } elseif (in_array($_REQUEST['Label'], $keysArray)) {
+                $this->setHeaderGZiped();
+                $this->setHeaderNoCache('application/json');
+                echo $this->setArray2json($this->knownLabels[$_REQUEST['Label']]);
+                $this->setFooterGZiped();
+                $showLabels = false;
+            } else {
+                $feedback   = '<span style="background-color:red;color:white;">There is no valid label transmited...';
+                $showLabels = true;
+            }
+        } else {
+            $feedback   = '<span style="background-color:red;color:white;">Label not set...';
+            $showLabels = true;
+        }
+        if ($showLabels) {
+            $sReturn[] = $this->setHeaderCommon([
+                'lang'  => 'en-US',
+                'title' => 'Informator'
+            ]);
+            $sReturn[] = $feedback . 'So you might want to choose one from the list below:</span>';
+            foreach ($keysArray as $value) {
+                $sReturn[] = '<br/>'
+                    . '<a href="?Label=' . urlencode($value) . '" target="_blank">' . $value . '</a>';
+            }
+            $sReturn[] = $this->setFooterCommon();
+        }
+        return implode('', $sReturn);
+    }
+
     /**
      * Builds an array with most important key aspects of LAMP/WAMP
      * @param  boolean $full
@@ -382,13 +393,14 @@ class Informator
     protected function systemInfo()
     {
         return [
-            'Apache'          => $this->getApacheDetails(),
-            'Client'          => $this->getClientBrowserDetails(),
-            'InfoCompareFile' => $this->getFileDetails(__FILE__),
-            'MySQL'           => $this->getMySQLinfo(),
-            'PHP'             => $this->getPhpDetails(),
-            'Server'          => $this->getServerDetails(),
-            'Tomcat'          => $this->getTomcatDetails()['Tomcat'],
+            'Apache'            => $this->getApacheDetails(),
+            'Auto Dependencies' => $this->getPackageDetailsFromGivenComposerLockFile($this->composerLockFile),
+            'Client'            => $this->getClientBrowserDetails(),
+            'InfoCompareFile'   => $this->getFileDetails(__FILE__),
+            'MySQL'             => $this->getMySQLinfo(),
+            'PHP'               => $this->getPhpDetails(),
+            'Server'            => $this->getServerDetails(),
+            'Tomcat'            => $this->getTomcatDetails()['Tomcat'],
         ];
     }
 }
