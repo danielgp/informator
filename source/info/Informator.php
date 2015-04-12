@@ -333,15 +333,8 @@ class Informator
 
     private function getTomcatDetails()
     {
-        $url             = 'http://' . $_SERVER['SERVER_NAME'] . ':8080/JavaBridge/TomcatInfos.php';
-        $sInfo['Tomcat'] = $this->getContentFromUrlThroughCurl($url)['response'];
-        $sReturn         = '';
-        if ($this->isJson($sInfo['Tomcat'])) {
-            $sReturn['Tomcat'] = $this->setJson2array($sInfo['Tomcat']);
-            ksort($sReturn);
-        } else {
-            $sReturn['Tomcat'] = null;
-        }
+        $url               = 'http://' . $_SERVER['SERVER_NAME'] . ':8080/JavaBridge/TomcatInfos.php';
+        $sReturn['Tomcat'] = $this->getContentFromUrlThroughCurlAsArrayIfJson($url)['response'];
         return $sReturn;
     }
 
