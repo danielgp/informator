@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "danielgp/common-lib",
-            "version": "1.7.5",
+            "version": "1.7.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielgp/common-lib.git",
-                "reference": "8a159b89cd2263fe0dd119a6db1706fca2a8d321"
+                "reference": "574697cd855c6e0acefcb60401235d38bc3e4176"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielgp/common-lib/zipball/8a159b89cd2263fe0dd119a6db1706fca2a8d321",
-                "reference": "8a159b89cd2263fe0dd119a6db1706fca2a8d321",
+                "url": "https://api.github.com/repos/danielgp/common-lib/zipball/574697cd855c6e0acefcb60401235d38bc3e4176",
+                "reference": "574697cd855c6e0acefcb60401235d38bc3e4176",
                 "shasum": ""
             },
             "require": {
@@ -49,20 +49,20 @@
                 }
             ],
             "description": "Common functions to be used where needed",
-            "time": "2015-04-12 13:55:59"
+            "time": "2015-04-19 15:31:15"
         },
         {
             "name": "doctrine/cache",
-            "version": "v1.4.0",
+            "version": "v1.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/cache.git",
-                "reference": "2346085d2b027b233ae1d5de59b07440b9f288c8"
+                "reference": "c9eadeb743ac6199f7eec423cb9426bc518b7b03"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/cache/zipball/2346085d2b027b233ae1d5de59b07440b9f288c8",
-                "reference": "2346085d2b027b233ae1d5de59b07440b9f288c8",
+                "url": "https://api.github.com/repos/doctrine/cache/zipball/c9eadeb743ac6199f7eec423cb9426bc518b7b03",
+                "reference": "c9eadeb743ac6199f7eec423cb9426bc518b7b03",
                 "shasum": ""
             },
             "require": {
@@ -73,13 +73,13 @@
             },
             "require-dev": {
                 "phpunit/phpunit": ">=3.7",
-                "predis/predis": "~0.8",
+                "predis/predis": "~1.0",
                 "satooshi/php-coveralls": "~0.6"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.4.x-dev"
+                    "dev-master": "1.5.x-dev"
                 }
             },
             "autoload": {
@@ -119,7 +119,7 @@
                 "cache",
                 "caching"
             ],
-            "time": "2015-01-15 20:38:55"
+            "time": "2015-04-15 00:11:59"
         },
         {
             "name": "gettext/gettext",
