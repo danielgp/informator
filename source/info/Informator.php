@@ -43,7 +43,7 @@ class Informator
             '--- List of known labels' => '',
             'ApacheInfo'               => $this->getApacheDetails(),
             'Auto Dependencies'        => $this->getPackageDetailsFromGivenComposerLockFile($this->composerLockFile),
-            'Auto Dependencies file'   => [$fileToRead],
+            'Auto Dependencies file'   => [$this->composerLockFile],
             'ClientInfo'               => $this->getClientBrowserDetails(),
             'MySQL Databases All'      => $this->getMySQLinfo(['Databases All']),
             'MySQL Databases Client'   => $this->getMySQLinfo(['Databases Client']),
