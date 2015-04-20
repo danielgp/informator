@@ -65,6 +65,6 @@ class TomcatDetection
             'Version'                        => $_SERVER['SERVER_SIGNATURE']
         ];
         ksort($tomcatInfos);
-        return $this->setArray2json($tomcatInfos);
+        return $this->setArrayToJson($tomcatInfos);
     }
 }

@@ -346,13 +346,13 @@ class Informator
             if ($_REQUEST['Label'] == '--- List of known labels') {
                 $this->setHeaderGZiped();
                 $this->setHeaderNoCache('application/json');
-                echo $this->setArray2json($keysArray);
+                echo $this->setArrayToJson($keysArray);
                 $this->setFooterGZiped();
                 $showLabels = false;
             } elseif (in_array($_REQUEST['Label'], $keysArray)) {
                 $this->setHeaderGZiped();
                 $this->setHeaderNoCache('application/json');
-                echo $this->setArray2json($this->knownLabels[$_REQUEST['Label']]);
+                echo $this->setArrayToJson($this->knownLabels[$_REQUEST['Label']]);
                 $this->setFooterGZiped();
                 $showLabels = false;
             } else {
