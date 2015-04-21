@@ -26,6 +26,7 @@
  *
  */
 require_once 'java/Java.inc';
+require_once 'vendor/danielgp/common-lib/source/NetworkComponentsByDanielGP.php';
 require_once 'vendor/danielgp/common-lib/source/DomComponentsByDanielGPwithCDN.php';
 require_once 'vendor/danielgp/common-lib/source/DomComponentsByDanielGP.php';
 require_once 'vendor/danielgp/common-lib/source/MySQLiByDanielGPqueries.php';
