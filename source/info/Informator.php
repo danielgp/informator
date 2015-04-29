@@ -45,6 +45,7 @@ class Informator
             'Auto Dependencies'        => $this->getPackageDetailsFromGivenComposerLockFile($this->composerLockFile),
             'Auto Dependencies file'   => [$this->composerLockFile],
             'ClientInfo'               => $this->getClientBrowserDetails(),
+            'Informator file details'  => $this->getFileDetails(__FILE__),
             'MySQL Databases All'      => $this->getMySQLinfo(['Databases All']),
             'MySQL Databases Client'   => $this->getMySQLinfo(['Databases Client']),
             'MySQL Engines Active'     => $this->getMySQLinfo(['Engines Active']),
