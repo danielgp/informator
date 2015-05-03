@@ -14,9 +14,7 @@
         "php": ">=5.4",
         "ext-curl": "*",
         "ext-mysqli": "*",
-        "danielgp/common-lib": "*",
-        "doctrine/cache": "*",
-        "piwik/device-detector": "*"
+        "danielgp/common-lib": "*"
     },
     "autoload": {
         "psr-4": {

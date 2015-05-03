@@ -31,6 +31,7 @@ require_once 'vendor/danielgp/common-lib/source/DomComponentsByDanielGPwithCDN.p
 require_once 'vendor/danielgp/common-lib/source/DomComponentsByDanielGP.php';
 require_once 'vendor/danielgp/common-lib/source/MySQLiByDanielGPqueries.php';
 require_once 'vendor/danielgp/common-lib/source/MySQLiByDanielGP.php';
+require_once 'vendor/danielgp/common-lib/source/BrowserAgentInfosByDanielGP.php';
 require_once 'vendor/danielgp/common-lib/source/RomanianHolidays.php';
 require_once 'vendor/danielgp/common-lib/source/CommonCode.php';
 require_once 'TomcatDetection.php';

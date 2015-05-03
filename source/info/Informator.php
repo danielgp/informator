@@ -82,22 +82,6 @@ class Informator
         }
     }
 
-    private function getAcceptFomrUserAgent()
-    {
-        $sReturn           = [];
-        $sReturn['accept'] = $_SERVER['HTTP_ACCEPT'];
-        if (isset($_SERVER['HTTP_ACCEPT_CHARSET'])) {
-            $sReturn['accept_charset'] = $_SERVER['HTTP_ACCEPT_CHARSET'];
-        }
-        if (isset($_SERVER['HTTP_ACCEPT_ENCODING'])) {
-            $sReturn['accept_encoding'] = $_SERVER['HTTP_ACCEPT_ENCODING'];
-        }
-        if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-            $sReturn['accept_language'] = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
-        }
-        return $sReturn;
-    }
-
     private function getApacheDetails()
     {
         $ss = explode(' ', $_SERVER['SERVER_SOFTWARE']);
@@ -132,98 +116,6 @@ class Informator
         ksort($sInfo['Apache']['Modules']);
         ksort($sInfo['Apache']);
         return $sInfo['Apache'];
-    }
-
-    private function getArchitectureFromUserAgent($userAgent, $targetToAnalyze = 'os')
-    {
-        $isX64 = false;
-        switch ($targetToAnalyze) {
-            case 'browser':
-                if (strpos($userAgent, 'Win64') && strpos($userAgent, 'x64')) {
-                    $isX64 = true;
-                }
-                break;
-            case 'os':
-                if (strpos($userAgent, 'x86_64')) {
-                    $isX64 = true;
-                } elseif (strpos($userAgent, 'x86-64')) {
-                    $isX64 = true;
-                } elseif (strpos($userAgent, 'Win64')) {
-                    $isX64 = true;
-                } elseif (strpos($userAgent, 'x64;')) {
-                    $isX64 = true;
-                } elseif (strpos(strtolower($userAgent), 'amd64')) {
-                    $isX64 = true;
-                } elseif (strpos($userAgent, 'WOW64')) {
-                    $isX64 = true;
-                } elseif (strpos($userAgent, 'x64_64')) {
-                    $isX64 = true;
-                }
-                break;
-            default:
-                return 'Unknown target to analyze...';
-                break;
-        }
-        if ($isX64) {
-            return 'x64 (64 bit)';
-        } else {
-            return 'x86 (32 bit)';
-        }
-    }
-
-    private function getClientBrowserDetails()
-    {
-        if (isset($_GET['ua'])) {
-            $userAgent = $_GET['ua'];
-        } else {
-            $userAgent = $_SERVER['HTTP_USER_AGENT'];
-        }
-        $dd = new \DeviceDetector\DeviceDetector($userAgent);
-        $dd->setCache(new \Doctrine\Common\Cache\PhpFileCache('../../tmp/'));
-        $dd->discardBotInformation();
-        $dd->parse();
-        if ($dd->isBot()) {
-            return [
-                'Bot' => $dd->getBot(), // handle bots,spiders,crawlers,...
-            ];
-        } else {
-            $http_accept_language = isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : '';
-            preg_match_all('/([a-z]{2})(?:-[a-zA-Z]{2})?/', $http_accept_language, $m);
-            $br                   = new \DeviceDetector\Parser\Client\Browser();
-            $browserFamily        = $br->getBrowserFamily($dd->getClient('short_name'));
-            $browserInformation   = array_merge($dd->getClient(), [
-                'architecture'        => $this->getArchitectureFromUserAgent($userAgent, 'browser'),
-                'connection'          => $_SERVER['HTTP_CONNECTION'],
-                'family'              => ($browserFamily !== false ? $browserFamily : 'Unknown'),
-                'host'                => $_SERVER['HTTP_HOST'],
-                'preferred locale'    => $m[0],
-                'preferred languages' => array_values(array_unique(array_values($m[1]))),
-                'referrer'            => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : ''),
-                'user_agent'          => $dd->getUserAgent(),
-                ], $this->getAcceptFomrUserAgent());
-            ksort($browserInformation);
-            $os                   = new \DeviceDetector\Parser\OperatingSystem();
-            $osFamily             = $os->getOsFamily($dd->getOs('short_name'));
-            $osInfo               = array_merge($dd->getOs(), [
-                'architecture' => $this->getArchitectureFromUserAgent($userAgent, 'os'),
-                'family'       => ($osFamily !== false ? $osFamily : 'Unknown')
-            ]);
-            ksort($osInfo);
-            $clientIp             = $this->getClientRealIpAddress();
-            return [
-                'Browser' => $browserInformation,
-                'Device'  => [
-                    'brand'     => $dd->getDeviceName(),
-                    'ip'        => $clientIp,
-                    'ip direct' => $_SERVER['REMOTE_ADDR'],
-                    'ip type'   => $this->checkIpIsPrivate($clientIp),
-                    'ip v4/v6'  => $this->checkIpIsV4OrV6($clientIp),
-                    'model'     => $dd->getModel(),
-                    'name'      => $dd->getBrandName(),
-                ],
-                'OS'      => $osInfo,
-            ];
-        }
     }
 
     private function getMySQLinfo($returnType = ['Engines Active', 'General', 'Variables Global'])
