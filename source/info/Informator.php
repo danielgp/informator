@@ -226,8 +226,14 @@ class Informator
 
     private function getTomcatDetails()
     {
+        $sReturn['Tomcat'] = '---';
         $url               = 'http://' . $_SERVER['SERVER_NAME'] . ':8080/JavaBridge/TomcatInfos.php';
-        $sReturn['Tomcat'] = $this->getContentFromUrlThroughCurlAsArrayIfJson($url)['response'];
+        $urlFeedback       = $this->getContentFromUrlThroughCurlAsArrayIfJson($url);
+        if (is_array($urlFeedback)) {
+            if (isset($urlFeedback['response'])) {
+                $sReturn['Tomcat'] = $urlFeedback['response'];
+            }
+        }
         return $sReturn;
     }
 
