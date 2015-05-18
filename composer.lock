@@ -46,16 +46,16 @@
         },
         {
             "name": "danielgp/common-lib",
-            "version": "1.9.10",
+            "version": "1.9.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielgp/common-lib.git",
-                "reference": "7ec7f438a8f705eec2a17528595609da750c478d"
+                "reference": "a4a8e9dbbb991a5743c141e121c1633f70de8707"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielgp/common-lib/zipball/7ec7f438a8f705eec2a17528595609da750c478d",
-                "reference": "7ec7f438a8f705eec2a17528595609da750c478d",
+                "url": "https://api.github.com/repos/danielgp/common-lib/zipball/a4a8e9dbbb991a5743c141e121c1633f70de8707",
+                "reference": "a4a8e9dbbb991a5743c141e121c1633f70de8707",
                 "shasum": ""
             },
             "require": {
@@ -100,7 +100,7 @@
                 }
             ],
             "description": "Common functions to be used where needed",
-            "time": "2015-05-17 18:32:14"
+            "time": "2015-05-18 20:44:19"
         },
         {
             "name": "doctrine/cache",
