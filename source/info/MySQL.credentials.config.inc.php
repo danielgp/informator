@@ -32,7 +32,7 @@ if (!defined('MYSQL_PORT')) {
     define('MYSQL_PORT', '3306');
 }
 if (!defined('MYSQL_USERNAME')) {
-    define('MYSQL_USERNAME', 'web_informator');
+    define('MYSQL_USERNAME', 'web_3rdparty_inf');
 }
 if (!defined('MYSQL_PASSWORD')) {
     define('MYSQL_PASSWORD', 'G6FTigKY(&w{8yquWV%SMe`\?z+(sJ');
