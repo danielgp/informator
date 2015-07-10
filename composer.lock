@@ -46,16 +46,16 @@
         },
         {
             "name": "danielgp/browser-agent-info",
-            "version": "1.0.2",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielgp/browser-agent-info.git",
-                "reference": "c33f48a3dbc11936c4220828f9317b6c3d74377d"
+                "reference": "06e69ee55144dfb19eb834c64228d310621afd08"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielgp/browser-agent-info/zipball/c33f48a3dbc11936c4220828f9317b6c3d74377d",
-                "reference": "c33f48a3dbc11936c4220828f9317b6c3d74377d",
+                "url": "https://api.github.com/repos/danielgp/browser-agent-info/zipball/06e69ee55144dfb19eb834c64228d310621afd08",
+                "reference": "06e69ee55144dfb19eb834c64228d310621afd08",
                 "shasum": ""
             },
             "require": {
@@ -89,20 +89,20 @@
                 }
             ],
             "description": "Get client information from browser agent string",
-            "time": "2015-06-22 11:35:28"
+            "time": "2015-07-10 13:46:31"
         },
         {
             "name": "danielgp/common-lib",
-            "version": "1.12.1",
+            "version": "1.12.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielgp/common-lib.git",
-                "reference": "af84be98903e35f1ce33bb7cc5403e4ff84d9d3b"
+                "reference": "f4ec5625e496166cbc193027ac3a8eba09a28067"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielgp/common-lib/zipball/af84be98903e35f1ce33bb7cc5403e4ff84d9d3b",
-                "reference": "af84be98903e35f1ce33bb7cc5403e4ff84d9d3b",
+                "url": "https://api.github.com/repos/danielgp/common-lib/zipball/f4ec5625e496166cbc193027ac3a8eba09a28067",
+                "reference": "f4ec5625e496166cbc193027ac3a8eba09a28067",
                 "shasum": ""
             },
             "require": {
@@ -142,7 +142,7 @@
                 }
             ],
             "description": "Common functions to be used where needed",
-            "time": "2015-07-07 17:02:53"
+            "time": "2015-07-10 15:38:32"
         },
         {
             "name": "danielgp/network-components",
