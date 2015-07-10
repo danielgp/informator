@@ -28,16 +28,15 @@
 
 namespace danielgp\informator;
 
-class Informator
-{
+class Informator {
 
-    use \danielgp\common_lib\CommonCode;
+    use \danielgp\common_lib\CommonCode,
+        \danielgp\network_components\NetworkComponentsByDanielGP;
 
     private $knownLabels;
     private $composerLockFile;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->composerLockFile = realpath('../../') . DIRECTORY_SEPARATOR . 'composer.lock';
         $this->knownLabels      = [
             '--- List of known labels' => '',
@@ -68,8 +67,7 @@ class Informator
         echo $this->setInterface();
     }
 
-    protected function connectToMySqlServer()
-    {
+    protected function connectToMySqlServer() {
         if (is_null($this->mySQLconnection)) {
             $mySQLconfig = [
                 'host'     => MYSQL_HOST,
@@ -82,8 +80,7 @@ class Informator
         }
     }
 
-    private function getApacheDetails()
-    {
+    private function getApacheDetails() {
         $ss = explode(' ', $_SERVER['SERVER_SOFTWARE']);
         foreach ($ss as $value) {
             $tmp = explode('/', $value);
@@ -118,8 +115,7 @@ class Informator
         return $sInfo['Apache'];
     }
 
-    private function getMySQLinfo($returnType = ['Engines Active', 'General', 'Variables Global'])
-    {
+    private function getMySQLinfo($returnType = ['Engines Active', 'General', 'Variables Global']) {
         $this->connectToMySqlServer();
         $sInfo = [];
         foreach ($returnType as $value) {
@@ -148,8 +144,7 @@ class Informator
         return $sInfo['MySQL'];
     }
 
-    private function getPhpDetails($returnType = ['General', 'INI Settings', 'Extensions Loaded'])
-    {
+    private function getPhpDetails($returnType = ['General', 'INI Settings', 'Extensions Loaded']) {
         $sInfo = [];
         foreach ($returnType as $value) {
             switch ($value) {
@@ -180,8 +175,7 @@ class Informator
         return $sInfo['PHP'];
     }
 
-    private function getServerDetails()
-    {
+    private function getServerDetails() {
         $serverMachineType = 'unknown';
         if (function_exists('php_uname')) {
             switch (php_uname('m')) {
@@ -224,8 +218,7 @@ class Informator
         ];
     }
 
-    private function getTomcatDetails()
-    {
+    private function getTomcatDetails() {
         $sReturn['Tomcat'] = '---';
         $url               = 'http://' . $_SERVER['SERVER_NAME'] . ':8080/JavaBridge/TomcatInfos.php';
         $urlFeedback       = $this->getContentFromUrlThroughCurlAsArrayIfJson($url);
@@ -237,8 +230,7 @@ class Informator
         return $sReturn;
     }
 
-    private function setInterface()
-    {
+    private function setInterface() {
         $sReturn   = [];
         $keysArray = array_keys($this->knownLabels);
         if (isset($_REQUEST['Label'])) {
@@ -270,7 +262,7 @@ class Informator
             $sReturn[] = $feedback . 'So you might want to choose one from the list below:</span>';
             foreach ($keysArray as $value) {
                 $sReturn[] = '<br/>'
-                    . '<a href="?Label=' . urlencode($value) . '" target="_blank">' . $value . '</a>';
+                        . '<a href="?Label=' . urlencode($value) . '" target="_blank">' . $value . '</a>';
             }
             $sReturn[] = $this->setFooterCommon();
         }
@@ -282,8 +274,7 @@ class Informator
      * @param  boolean $full
      * @return array
      */
-    protected function systemInfo()
-    {
+    protected function systemInfo() {
         return [
             'Apache'            => $this->getApacheDetails(),
             'Auto Dependencies' => $this->getPackageDetailsFromGivenComposerLockFile($this->composerLockFile),
@@ -295,4 +286,5 @@ class Informator
             'Tomcat'            => $this->getTomcatDetails()['Tomcat'],
         ];
     }
+
 }
