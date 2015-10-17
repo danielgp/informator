@@ -5,19 +5,20 @@
         "This file is @generated automatically"
     ],
     "hash": "85cea073d09148a06a819ec4502eb50d",
+    "content-hash": "b232f63d91682faa80c1883d0e5a2178",
     "packages": [
         {
             "name": "components/flag-icon-css",
-            "version": "0.7.1",
+            "version": "0.8.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lipis/flag-icon-css.git",
-                "reference": "db9d702ac15e74a84d5d859c9f3b1ce4c1882304"
+                "reference": "63b89f891914b589d12c6e71989a0eb54d35a7a3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lipis/flag-icon-css/zipball/db9d702ac15e74a84d5d859c9f3b1ce4c1882304",
-                "reference": "db9d702ac15e74a84d5d859c9f3b1ce4c1882304",
+                "url": "https://api.github.com/repos/lipis/flag-icon-css/zipball/63b89f891914b589d12c6e71989a0eb54d35a7a3",
+                "reference": "63b89f891914b589d12c6e71989a0eb54d35a7a3",
                 "shasum": ""
             },
             "type": "component",
@@ -42,20 +43,20 @@
                 }
             ],
             "description": "CSS for vector based country flags",
-            "time": "2015-03-26 16:41:06"
+            "time": "2015-09-05 08:34:56"
         },
         {
             "name": "danielgp/browser-agent-info",
-            "version": "1.1.1",
+            "version": "1.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielgp/browser-agent-info.git",
-                "reference": "06e69ee55144dfb19eb834c64228d310621afd08"
+                "reference": "a5bdbe602afff0a637c3c4b66d3fcd9734fe319f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielgp/browser-agent-info/zipball/06e69ee55144dfb19eb834c64228d310621afd08",
-                "reference": "06e69ee55144dfb19eb834c64228d310621afd08",
+                "url": "https://api.github.com/repos/danielgp/browser-agent-info/zipball/a5bdbe602afff0a637c3c4b66d3fcd9734fe319f",
+                "reference": "a5bdbe602afff0a637c3c4b66d3fcd9734fe319f",
                 "shasum": ""
             },
             "require": {
@@ -89,20 +90,20 @@
                 }
             ],
             "description": "Get client information from browser agent string",
-            "time": "2015-07-10 13:46:31"
+            "time": "2015-10-17 13:52:15"
         },
         {
             "name": "danielgp/common-lib",
-            "version": "1.12.2",
+            "version": "2.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielgp/common-lib.git",
-                "reference": "f4ec5625e496166cbc193027ac3a8eba09a28067"
+                "reference": "a97f83eecdd7a7359103c0e349f7d1fca04e376a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielgp/common-lib/zipball/f4ec5625e496166cbc193027ac3a8eba09a28067",
-                "reference": "f4ec5625e496166cbc193027ac3a8eba09a28067",
+                "url": "https://api.github.com/repos/danielgp/common-lib/zipball/a97f83eecdd7a7359103c0e349f7d1fca04e376a",
+                "reference": "a97f83eecdd7a7359103c0e349f7d1fca04e376a",
                 "shasum": ""
             },
             "require": {
@@ -112,7 +113,7 @@
                 "ext-curl": "*",
                 "ext-mysqli": "*",
                 "gettext/gettext": ">=3.4",
-                "php": ">=5.4",
+                "php": ">=5.5",
                 "symfony/filesystem": ">2.7",
                 "symfony/finder": ">=2.7"
             },
@@ -126,6 +127,7 @@
                     "source/CommonCode.php",
                     "source/DomComponentsByDanielGP.php",
                     "source/DomComponentsByDanielGPwithCDN.php",
+                    "source/MySQLiAdvancedOutput.php",
                     "source/MySQLiByDanielGPqueries.php",
                     "source/MySQLiByDanielGP.php"
                 ]
@@ -142,20 +144,20 @@
                 }
             ],
             "description": "Common functions to be used where needed",
-            "time": "2015-07-10 15:38:32"
+            "time": "2015-10-16 19:17:55"
         },
         {
             "name": "danielgp/network-components",
-            "version": "1.0.1",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielgp/network-components.git",
-                "reference": "0ef961b7d35d6aa97bc351e90d10cc8ff6c94ef3"
+                "reference": "5445fd39e84323e0804ea154dfad85643b92bb22"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielgp/network-components/zipball/0ef961b7d35d6aa97bc351e90d10cc8ff6c94ef3",
-                "reference": "0ef961b7d35d6aa97bc351e90d10cc8ff6c94ef3",
+                "url": "https://api.github.com/repos/danielgp/network-components/zipball/5445fd39e84323e0804ea154dfad85643b92bb22",
+                "reference": "5445fd39e84323e0804ea154dfad85643b92bb22",
                 "shasum": ""
             },
             "require": {
@@ -182,20 +184,20 @@
                 }
             ],
             "description": "Common functions to be used where needed",
-            "time": "2015-06-20 19:49:39"
+            "time": "2015-07-21 15:37:02"
         },
         {
             "name": "doctrine/cache",
-            "version": "v1.4.1",
+            "version": "v1.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/cache.git",
-                "reference": "c9eadeb743ac6199f7eec423cb9426bc518b7b03"
+                "reference": "8c434000f420ade76a07c64cbe08ca47e5c101ca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/cache/zipball/c9eadeb743ac6199f7eec423cb9426bc518b7b03",
-                "reference": "c9eadeb743ac6199f7eec423cb9426bc518b7b03",
+                "url": "https://api.github.com/repos/doctrine/cache/zipball/8c434000f420ade76a07c64cbe08ca47e5c101ca",
+                "reference": "8c434000f420ade76a07c64cbe08ca47e5c101ca",
                 "shasum": ""
             },
             "require": {
@@ -252,20 +254,20 @@
                 "cache",
                 "caching"
             ],
-            "time": "2015-04-15 00:11:59"
+            "time": "2015-08-31 12:36:41"
         },
         {
             "name": "gettext/gettext",
-            "version": "v3.4.2",
+            "version": "v3.5.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/oscarotero/Gettext.git",
-                "reference": "6d8fae62ce7df8676a351dfa5728c8f87f20ef53"
+                "reference": "4f72cc4fcf056aade6155f634d7398ed269db48c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/oscarotero/Gettext/zipball/6d8fae62ce7df8676a351dfa5728c8f87f20ef53",
-                "reference": "6d8fae62ce7df8676a351dfa5728c8f87f20ef53",
+                "url": "https://api.github.com/repos/oscarotero/Gettext/zipball/4f72cc4fcf056aade6155f634d7398ed269db48c",
+                "reference": "4f72cc4fcf056aade6155f634d7398ed269db48c",
                 "shasum": ""
             },
             "require": {
@@ -311,7 +313,7 @@
                 "po",
                 "translation"
             ],
-            "time": "2015-04-28 17:50:01"
+            "time": "2015-08-27 17:44:38"
         },
         {
             "name": "gettext/languages",
@@ -416,16 +418,16 @@
         },
         {
             "name": "piwik/device-detector",
-            "version": "3.2.2",
+            "version": "3.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/piwik/device-detector.git",
-                "reference": "e755813db54fb94d31436efce7fc9840b6038c8b"
+                "reference": "fcb61cc9e669653febdce2cd1a1f0833b569fbb6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/piwik/device-detector/zipball/e755813db54fb94d31436efce7fc9840b6038c8b",
-                "reference": "e755813db54fb94d31436efce7fc9840b6038c8b",
+                "url": "https://api.github.com/repos/piwik/device-detector/zipball/fcb61cc9e669653febdce2cd1a1f0833b569fbb6",
+                "reference": "fcb61cc9e669653febdce2cd1a1f0833b569fbb6",
                 "shasum": ""
             },
             "require": {
@@ -463,20 +465,20 @@
                 "parser",
                 "useragent"
             ],
-            "time": "2015-06-23 21:25:52"
+            "time": "2015-09-09 20:28:18"
         },
         {
             "name": "symfony/filesystem",
-            "version": "v2.7.1",
+            "version": "v2.7.5",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/Filesystem.git",
-                "reference": "a0d43eb3e17d4f4c6990289805a488a0482a07f3"
+                "url": "https://github.com/symfony/filesystem.git",
+                "reference": "a17f8a17c20e8614c15b8e116e2f4bcde102cfab"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Filesystem/zipball/a0d43eb3e17d4f4c6990289805a488a0482a07f3",
-                "reference": "a0d43eb3e17d4f4c6990289805a488a0482a07f3",
+                "url": "https://api.github.com/repos/symfony/filesystem/zipball/a17f8a17c20e8614c15b8e116e2f4bcde102cfab",
+                "reference": "a17f8a17c20e8614c15b8e116e2f4bcde102cfab",
                 "shasum": ""
             },
             "require": {
@@ -512,20 +514,20 @@
             ],
             "description": "Symfony Filesystem Component",
             "homepage": "https://symfony.com",
-            "time": "2015-06-08 09:37:21"
+            "time": "2015-09-09 17:42:36"
         },
         {
             "name": "symfony/finder",
-            "version": "v2.7.1",
+            "version": "v2.7.5",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/Finder.git",
-                "reference": "c13a40d638aeede1e8400f8c956c7f9246c05f75"
+                "url": "https://github.com/symfony/finder.git",
+                "reference": "8262ab605973afbb3ef74b945daabf086f58366f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Finder/zipball/c13a40d638aeede1e8400f8c956c7f9246c05f75",
-                "reference": "c13a40d638aeede1e8400f8c956c7f9246c05f75",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/8262ab605973afbb3ef74b945daabf086f58366f",
+                "reference": "8262ab605973afbb3ef74b945daabf086f58366f",
                 "shasum": ""
             },
             "require": {
@@ -561,7 +563,7 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "https://symfony.com",
-            "time": "2015-06-04 20:11:48"
+            "time": "2015-09-19 19:59:23"
         }
     ],
     "packages-dev": [],
