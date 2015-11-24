@@ -50,8 +50,8 @@ class TomcatDetection
     {
         $system      = new \Java('java.lang.System');
         $tomcatInfos = [
-            'CATALINA_HOME'                  => $_SERVER['CATALINA_HOME'],
-            'JAVA_HOME'                      => $_SERVER['JAVA_HOME'],
+            'CATALINA_HOME'                  => filter_var($_SERVER['CATALINA_HOME'], FILTER_SANITIZE_STRING),
+            'JAVA_HOME'                      => filter_var($_SERVER['JAVA_HOME'], FILTER_SANITIZE_STRING),
             'Java Version'                   => ((string) $system->getProperty('java.version')),
             'Java Runtime Version'           => ((string) $system->getProperty('java.runtime.version')),
             'Java Specification Version'     => ((string) $system->getProperty('java.specification.version')),
