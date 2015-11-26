@@ -94,16 +94,16 @@
         },
         {
             "name": "danielgp/common-lib",
-            "version": "2.4.9",
+            "version": "2.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielgp/common-lib.git",
-                "reference": "9d374fc14edcbcb8e83128c1e5774fbda6d74459"
+                "reference": "37e08a76737c7a47c93e4178376b1843341bfe62"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielgp/common-lib/zipball/9d374fc14edcbcb8e83128c1e5774fbda6d74459",
-                "reference": "9d374fc14edcbcb8e83128c1e5774fbda6d74459",
+                "url": "https://api.github.com/repos/danielgp/common-lib/zipball/37e08a76737c7a47c93e4178376b1843341bfe62",
+                "reference": "37e08a76737c7a47c93e4178376b1843341bfe62",
                 "shasum": ""
             },
             "require": {
@@ -144,7 +144,7 @@
                 }
             ],
             "description": "Common functions to be used where needed",
-            "time": "2015-11-25 09:25:26"
+            "time": "2015-11-26 12:26:53"
         },
         {
             "name": "danielgp/network-components",
