@@ -25,15 +25,7 @@
  * SOFTWARE.
  *
  */
-require_once 'java/Java.inc';
-require_once 'vendor/danielgp/common-lib/source/CommonLibLocale.php';
-require_once 'vendor/danielgp/network-components/source/NetworkComponentsByDanielGP.php';
-require_once 'vendor/danielgp/common-lib/source/DomComponentsByDanielGPwithCDN.php';
-require_once 'vendor/danielgp/common-lib/source/DomComponentsByDanielGP.php';
-require_once 'vendor/danielgp/common-lib/source/MySQLiByDanielGPqueries.php';
-require_once 'vendor/danielgp/common-lib/source/MySQLiByDanielGP.php';
-require_once 'vendor/danielgp/browser-agent-info/source/BrowserAgentInfosByDanielGP.php';
-require_once 'vendor/danielgp/common-lib/source/CommonCode.php';
-require_once 'TomcatDetection.php';
+require_once 'MySQL.credentials.config.inc.php';
+require_once '../vendor/autoload.php';
 
-$app = new \danielgp\informator\TomcatDetection();
+$app = new \danielgp\informator\Informator();

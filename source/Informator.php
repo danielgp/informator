@@ -38,7 +38,7 @@ class Informator
 
     public function __construct()
     {
-        $this->composerLockFile = realpath('../../') . DIRECTORY_SEPARATOR . 'composer.lock';
+        $this->composerLockFile = realpath('../') . DIRECTORY_SEPARATOR . 'composer.lock';
         $this->knownLabels      = [
             '--- List of known labels' => '',
             'ApacheInfo'               => $this->getApacheDetails(),
@@ -227,7 +227,7 @@ class Informator
     private function getTomcatDetails()
     {
         $sReturn['Tomcat'] = '---';
-        $url               = 'http://' . $_SERVER['SERVER_NAME'] . ':8080/JavaBridge/TomcatInfos.php';
+        $url               = 'http://' . $_SERVER['SERVER_NAME'] . ':8080/informator.Tomcat/index.jsp';
         $urlFeedback       = $this->getContentFromUrlThroughCurlAsArrayIfJson($url);
         if (is_array($urlFeedback)) {
             if (isset($urlFeedback['response'])) {

@@ -18,12 +18,12 @@
     },
     "autoload": {
         "psr-4": {
-            "": "source/info/",
+            "": "source/",
             "danielgp\\common_lib\\source\\": "vendor/danielgp/common-lib/source/",
             "DeviceDetector\\" : "vendor/piwik/device-detector/"
         },
         "classmap": [
-            "source/info/Informator.php"
+            "source/Informator.php"
         ]
     },
     "minimum-stability": "stable",
