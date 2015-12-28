@@ -44,7 +44,7 @@ class Informator
             'ApacheInfo'               => $this->getApacheDetails(),
             'Auto Dependencies'        => $this->getPackageDetailsFromGivenComposerLockFile($this->composerLockFile),
             'Auto Dependencies file'   => [$this->composerLockFile],
-            'ClientInfo'               => $this->getClientBrowserDetails(),
+            'ClientInfo'               => $this->getClientBrowserDetailsForInformator(),
             'Informator file details'  => $this->getFileDetails(__FILE__),
             'MySQL Databases All'      => $this->getMySQLinfo(['Databases All']),
             'MySQL Databases Client'   => $this->getMySQLinfo(['Databases Client']),
@@ -59,7 +59,7 @@ class Informator
             'Php Stream Filters'       => $this->getPhpDetails(['Stream Filters']),
             'Php Stream Transports'    => $this->getPhpDetails(['Stream Transports']),
             'Php Stream Wrappers'      => $this->getPhpDetails(['Stream Wrappers']),
-            'Php info'                 => $this->getPhpDetails(['General', 'INI Settings', 'Extensions Loaded']),
+            'Php info'                 => $this->getPhpDetails(),
             'ServerInfo'               => $this->getServerDetails(),
             'SysInfo'                  => $this->systemInfo(),
             'TomcatInfo'               => $this->getTomcatDetails(),
@@ -84,8 +84,8 @@ class Informator
 
     private function getApacheDetails()
     {
-        $ss = explode(' ', $_SERVER['SERVER_SOFTWARE']);
-        foreach ($ss as $value) {
+        $srvSoftware = explode(' ', $_SERVER['SERVER_SOFTWARE']);
+        foreach ($srvSoftware as $value) {
             $tmp = explode('/', $value);
             if (strpos($value, 'Apache') !== false) {
                 $sInfo['Apache'] = [
@@ -118,6 +118,23 @@ class Informator
         return $sInfo['Apache'];
     }
 
+    private function getClientBrowserDetailsForInformator()
+    {
+        $tmpFolder = $this->getTemporaryFolder();
+        if (is_dir($tmpFolder)) {
+            clearstatcache();
+            if (is_writable($tmpFolder)) {
+                $tmpDoctrineCache = $tmpFolder . DIRECTORY_SEPARATOR . 'DoctrineCache';
+                $aReturn          = $this->getClientBrowserDetails(['Browser', 'Device', 'OS'], $tmpDoctrineCache);
+            } else {
+                $aReturn = $this->getClientBrowserDetails();
+            }
+        } else {
+            $aReturn = $this->getClientBrowserDetails();
+        }
+        return $aReturn;
+    }
+
     private function getMySQLinfo($returnType = ['Engines Active', 'General', 'Variables Global'])
     {
         $this->connectToMySqlServer();
@@ -148,7 +165,7 @@ class Informator
         return $sInfo['MySQL'];
     }
 
-    private function getPhpDetails($returnType = ['General', 'INI Settings', 'Extensions Loaded'])
+    private function getPhpDetails($returnType = ['General', 'INI Settings', 'Extensions Loaded', 'Temporary Folder'])
     {
         $sInfo = [];
         foreach ($returnType as $value) {
@@ -174,6 +191,9 @@ class Informator
                 case 'Stream Wrappers':
                     $sInfo['PHP'][$value] = $this->setArrayValuesAsKey(stream_get_wrappers());
                     break;
+                case 'Temporary Folder':
+                    $sInfo['PHP'][$value] = $this->getTemporaryFolder();
+                    break;
             }
         }
         ksort($sInfo['PHP']);
@@ -183,6 +203,12 @@ class Informator
     private function getServerDetails()
     {
         $serverMachineType = 'unknown';
+        $serverInfo        = [
+            'name'    => 'undisclosed',
+            'host'    => $_SERVER['HTTP_HOST'],
+            'release' => 'undisclosed',
+            'version' => 'undisclosed',
+        ];
         if (function_exists('php_uname')) {
             switch (php_uname('m')) {
                 case 'AMD64':
@@ -202,13 +228,6 @@ class Informator
                 'release' => php_uname('r'),
                 'version' => php_uname('v'),
             ];
-        } else {
-            $serverInfo = [
-                'name'    => 'undisclosed',
-                'host'    => $_SERVER['HTTP_HOST'],
-                'release' => 'undisclosed',
-                'version' => 'undisclosed',
-            ];
         }
         return [
             'OS'              => php_uname(),
@@ -222,6 +241,11 @@ class Informator
             'OS Release'      => $serverInfo['release'],
             'OS Version'      => $serverInfo['version'],
         ];
+    }
+
+    private function getTemporaryFolder()
+    {
+        return sys_get_temp_dir() . DIRECTORY_SEPARATOR;
     }
 
     private function getTomcatDetails()
@@ -287,7 +311,7 @@ class Informator
         return [
             'Apache'            => $this->getApacheDetails(),
             'Auto Dependencies' => $this->getPackageDetailsFromGivenComposerLockFile($this->composerLockFile),
-            'Client'            => $this->getClientBrowserDetails(),
+            'Client'            => $this->getClientBrowserDetailsForInformator(),
             'InfoCompareFile'   => $this->getFileDetails(__FILE__),
             'MySQL'             => $this->getMySQLinfo(),
             'PHP'               => $this->getPhpDetails(),
