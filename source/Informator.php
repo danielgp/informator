@@ -35,6 +35,7 @@ class Informator
 
     private $knownLabels;
     private $composerLockFile;
+    private $superGlobals;
 
     public function __construct()
     {
@@ -65,6 +66,8 @@ class Informator
             'TomcatInfo'               => ['getTomcatDetails', null],
         ];
         ksort($this->knownLabels);
+        $rqst                   = new \Symfony\Component\HttpFoundation\Request;
+        $this->superGlobals     = $rqst->createFromGlobals();
         echo $this->setInterface();
     }
 
@@ -126,7 +129,6 @@ class Informator
             clearstatcache();
             if (is_writable($tmpFolder)) {
                 $tmpDoctrineCache = $tmpFolder . DIRECTORY_SEPARATOR . 'DoctrineCache';
-                $aReturn          = $this->getClientBrowserDetails(['Browser', 'Device', 'OS'], $tmpDoctrineCache);
             }
         }
         return $this->getClientBrowserDetails(['Browser', 'Device', 'OS'], $tmpDoctrineCache);
@@ -202,7 +204,7 @@ class Informator
         $serverMachineType = 'unknown';
         $serverInfo        = [
             'name'    => 'undisclosed',
-            'host'    => $_SERVER['HTTP_HOST'],
+            'host'    => $this->superGlobals->getHttpHost(),
             'release' => 'undisclosed',
             'version' => 'undisclosed',
         ];
@@ -226,13 +228,14 @@ class Informator
                 'version' => php_uname('v'),
             ];
         }
+        $srvIp = $_SERVER['SERVER_ADDR'];
         return [
             'OS'              => php_uname(),
             'OS Architecture' => $serverMachineType,
             'OS Date/time'    => date('Y-m-d H:i:s'),
-            'OS Ip'           => $_SERVER['SERVER_ADDR'],
-            'OS Ip type'      => $this->checkIpIsPrivate($_SERVER['SERVER_ADDR']),
-            'OS Ip v4/v6'     => $this->checkIpIsV4OrV6($_SERVER['SERVER_ADDR']),
+            'OS Ip'           => $srvIp,
+            'OS Ip type'      => $this->checkIpIsPrivate($srvIp),
+            'OS Ip v4/v6'     => $this->checkIpIsV4OrV6($srvIp),
             'OS Name'         => $serverInfo['name'],
             'OS Host'         => $serverInfo['host'],
             'OS Release'      => $serverInfo['release'],
@@ -248,7 +251,7 @@ class Informator
     private function getTomcatDetails()
     {
         $sReturn['Tomcat'] = '---';
-        $url               = 'http://' . $_SERVER['SERVER_NAME'] . ':8080/informator.Tomcat/index.jsp';
+        $url               = 'http://' . $this->superGlobals->getHttpHost() . ':8080/informator.Tomcat/index.jsp';
         $urlFeedback       = $this->getContentFromUrlThroughCurlAsArrayIfJson($url);
         if (is_array($urlFeedback)) {
             if (isset($urlFeedback['response'])) {
@@ -262,8 +265,7 @@ class Informator
     {
         $sReturn        = [];
         $keysArray      = array_keys($this->knownLabels);
-        $rqst           = new \Symfony\Component\HttpFoundation\Request;
-        $requestedLabel = $rqst->createFromGlobals()->get('Label');
+        $requestedLabel = $this->superGlobals->get('Label');
         if (isset($requestedLabel)) {
             if ($requestedLabel == '--- List of known labels') {
                 $this->setHeaderGZiped();
@@ -279,7 +281,7 @@ class Informator
                     $arToReturn = call_user_func([$this, $lblValue[0]]);
                 } elseif (is_array($lblValue[1])) {
                     $arToReturn = call_user_func_array([$this, $lblValue[0]], [$lblValue[1]]);
-                } else {
+                } elseif (is_string($lblValue[1])) {
                     $arToReturn = call_user_func([$this, $lblValue[0]], $lblValue[1]);
                 }
                 echo $this->setArrayToJson($arToReturn);
