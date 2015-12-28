@@ -41,28 +41,28 @@ class Informator
         $this->composerLockFile = realpath('../') . DIRECTORY_SEPARATOR . 'composer.lock';
         $this->knownLabels      = [
             '--- List of known labels' => '',
-            'ApacheInfo'               => $this->getApacheDetails(),
-            'Auto Dependencies'        => $this->getPackageDetailsFromGivenComposerLockFile($this->composerLockFile),
+            'ApacheInfo'               => ['getApacheDetails', null],
+            'Auto Dependencies'        => ['getPackageDetailsFromGivenComposerLockFile', $this->composerLockFile],
             'Auto Dependencies file'   => [$this->composerLockFile],
-            'ClientInfo'               => $this->getClientBrowserDetailsForInformator(),
-            'Informator file details'  => $this->getFileDetails(__FILE__),
-            'MySQL Databases All'      => $this->getMySQLinfo(['Databases All']),
-            'MySQL Databases Client'   => $this->getMySQLinfo(['Databases Client']),
-            'MySQL Engines Active'     => $this->getMySQLinfo(['Engines Active']),
-            'MySQL Engines All'        => $this->getMySQLinfo(['Engines All']),
-            'MySQL General'            => $this->getMySQLinfo(['General']),
-            'MySQL Variables Global'   => $this->getMySQLinfo(['Variables Global']),
-            'MySQL info'               => $this->getMySQLinfo(['Engines Active', 'General', 'Variables Global']),
-            'Php Extensions Loaded'    => $this->getPhpDetails(['Extensions Loaded']),
-            'Php General'              => $this->getPhpDetails(['General']),
-            'Php INI Settings'         => $this->getPhpDetails(['INI Settings']),
-            'Php Stream Filters'       => $this->getPhpDetails(['Stream Filters']),
-            'Php Stream Transports'    => $this->getPhpDetails(['Stream Transports']),
-            'Php Stream Wrappers'      => $this->getPhpDetails(['Stream Wrappers']),
-            'Php info'                 => $this->getPhpDetails(),
-            'ServerInfo'               => $this->getServerDetails(),
-            'SysInfo'                  => $this->systemInfo(),
-            'TomcatInfo'               => $this->getTomcatDetails(),
+            'ClientInfo'               => ['getClientBrowserDetailsForInformator', null],
+            'Informator file details'  => ['getFileDetails', __FILE__],
+            'MySQL Databases All'      => ['getMySQLinfo', ['Databases All']],
+            'MySQL Databases Client'   => ['getMySQLinfo', ['Databases Client']],
+            'MySQL Engines Active'     => ['getMySQLinfo', ['Engines Active']],
+            'MySQL Engines All'        => ['getMySQLinfo', ['Engines All']],
+            'MySQL General'            => ['getMySQLinfo', ['General']],
+            'MySQL Variables Global'   => ['getMySQLinfo', ['Variables Global']],
+            'MySQL info'               => ['getMySQLinfo', ['Engines Active', 'General', 'Variables Global']],
+            'Php Extensions Loaded'    => ['getPhpDetails', ['Extensions Loaded']],
+            'Php General'              => ['getPhpDetails', ['General']],
+            'Php INI Settings'         => ['getPhpDetails', ['INI Settings']],
+            'Php Stream Filters'       => ['getPhpDetails', ['Stream Filters']],
+            'Php Stream Transports'    => ['getPhpDetails', ['Stream Transports']],
+            'Php Stream Wrappers'      => ['getPhpDetails', ['Stream Wrappers']],
+            'Php info'                 => ['getPhpDetails', null],
+            'ServerInfo'               => ['getServerDetails', null],
+            'SysInfo'                  => ['systemInfo', null],
+            'TomcatInfo'               => ['getTomcatDetails', null],
         ];
         ksort($this->knownLabels);
         echo $this->setInterface();
@@ -84,8 +84,8 @@ class Informator
 
     private function getApacheDetails()
     {
-        $srvSoftware = explode(' ', $_SERVER['SERVER_SOFTWARE']);
-        foreach ($srvSoftware as $value) {
+        $srvSoftwareArray = explode(' ', $_SERVER['SERVER_SOFTWARE']);
+        foreach ($srvSoftwareArray as $value) {
             $tmp = explode('/', $value);
             if (strpos($value, 'Apache') !== false) {
                 $sInfo['Apache'] = [
@@ -120,19 +120,16 @@ class Informator
 
     private function getClientBrowserDetailsForInformator()
     {
-        $tmpFolder = $this->getTemporaryFolder();
+        $tmpFolder        = $this->getTemporaryFolder();
+        $tmpDoctrineCache = null;
         if (is_dir($tmpFolder)) {
             clearstatcache();
             if (is_writable($tmpFolder)) {
                 $tmpDoctrineCache = $tmpFolder . DIRECTORY_SEPARATOR . 'DoctrineCache';
                 $aReturn          = $this->getClientBrowserDetails(['Browser', 'Device', 'OS'], $tmpDoctrineCache);
-            } else {
-                $aReturn = $this->getClientBrowserDetails();
             }
-        } else {
-            $aReturn = $this->getClientBrowserDetails();
         }
-        return $aReturn;
+        return $this->getClientBrowserDetails(['Browser', 'Device', 'OS'], $tmpDoctrineCache);
     }
 
     private function getMySQLinfo($returnType = ['Engines Active', 'General', 'Variables Global'])
@@ -142,10 +139,10 @@ class Informator
         foreach ($returnType as $value) {
             switch ($value) {
                 case 'Databases All':
-                    $sInfo['MySQL']['Engines All']      = $this->getMySQLlistDatabases(false);
+                    $sInfo['MySQL']['Databases All']    = $this->getMySQLlistDatabases(false);
                     break;
                 case 'Databases Client':
-                    $sInfo['MySQL']['Engines Client']   = $this->getMySQLlistDatabases(true);
+                    $sInfo['MySQL']['Databases Client'] = $this->getMySQLlistDatabases(true);
                     break;
                 case 'Engines Active':
                     $sInfo['MySQL']['Engines Active']   = $this->getMySQLlistEngines(true);
@@ -263,19 +260,29 @@ class Informator
 
     private function setInterface()
     {
-        $sReturn   = [];
-        $keysArray = array_keys($this->knownLabels);
-        if (isset($_REQUEST['Label'])) {
-            if ($_REQUEST['Label'] == '--- List of known labels') {
+        $sReturn        = [];
+        $keysArray      = array_keys($this->knownLabels);
+        $rqst           = new \Symfony\Component\HttpFoundation\Request;
+        $requestedLabel = $rqst->createFromGlobals()->get('Label');
+        if (isset($requestedLabel)) {
+            if ($requestedLabel == '--- List of known labels') {
                 $this->setHeaderGZiped();
                 $this->setHeaderNoCache('application/json');
                 echo $this->setArrayToJson($keysArray);
                 $this->setFooterGZiped();
                 $showLabels = false;
-            } elseif (in_array($_REQUEST['Label'], $keysArray)) {
+            } elseif (in_array($requestedLabel, $keysArray)) {
                 $this->setHeaderGZiped();
                 $this->setHeaderNoCache('application/json');
-                echo $this->setArrayToJson($this->knownLabels[$_REQUEST['Label']]);
+                $lblValue = $this->knownLabels[$requestedLabel];
+                if (is_null($lblValue[1])) {
+                    $arToReturn = call_user_func([$this, $lblValue[0]]);
+                } elseif (is_array($lblValue[1])) {
+                    $arToReturn = call_user_func_array([$this, $lblValue[0]], [$lblValue[1]]);
+                } else {
+                    $arToReturn = call_user_func([$this, $lblValue[0]], $lblValue[1]);
+                }
+                echo $this->setArrayToJson($arToReturn);
                 $this->setFooterGZiped();
                 $showLabels = false;
             } else {
