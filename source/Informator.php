@@ -77,37 +77,36 @@ class Informator
         $srvSignature     = $_SERVER['SERVER_SOFTWARE'];
         $srvSoftwareArray = explode(' ', $srvSignature);
         $sInfo            = [];
-        foreach ($srvSoftwareArray as $value) {
-            $tmp = explode('/', $value);
-            if (strpos($value, 'Apache') !== false) {
-                $sInfo['Apache'] = [
-                    'Name'      => $tmp[0],
-                    'Signature' => $srvSignature,
-                    'Version'   => $tmp[1]
-                ];
-            }
-            if (strpos($value, 'mod_fcgid') !== false) {
-                $sInfo['Apache']['Modules']['fcgid'] = [
-                    'Name'    => $tmp[0],
-                    'Version' => $tmp[1]
-                ];
-            }
-            if (strpos($value, 'OpenSSL') !== false) {
-                $sInfo['Apache']['Modules']['ssl'] = [
-                    'Name'    => $tmp[0],
-                    'Version' => $tmp[1]
-                ];
-            }
-            if (strpos($value, 'SVN') !== false) {
-                $sInfo['Apache']['Modules']['svn'] = [
-                    'Name'    => 'Subversion',
-                    'Version' => $tmp[1]
-                ];
-            }
+        $tmp              = explode('/', $srvSoftwareArray[0]);
+        if (strpos($srvSoftwareArray[0], 'Apache') !== false) {
+            $sInfo['Apache'] = [
+                'Name'      => $tmp[0],
+                'Signature' => $srvSignature,
+                'Version'   => $tmp[1]
+            ];
         }
-        ksort($sInfo['Apache']['Modules']);
+        $modulesToDisregard         = [
+            $srvSoftwareArray[0],
+            '(Win64)',
+        ];
+        $sInfo['Apache']['Modules'] = $this->getApacheModules(array_diff($srvSoftwareArray, $modulesToDisregard));
         ksort($sInfo['Apache']);
         return $sInfo['Apache'];
+    }
+
+    private function getApacheModules(array $srvSoftwareArray)
+    {
+        $aReturn = [];
+        foreach ($srvSoftwareArray as $value) {
+            $tmp                  = explode('/', $value);
+            $rootModule           = strtolower(str_replace(['mod_', 'OpenSSL'], ['', 'SSL'], $tmp[0]));
+            $aReturn[$rootModule] = [
+                'Name'    => $tmp[0],
+                'Version' => $tmp[1]
+            ];
+        }
+        ksort($aReturn);
+        return $aReturn;
     }
 
     private function getClientBrowserDetailsForInformator()
