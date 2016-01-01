@@ -42,28 +42,28 @@ class Informator
         $this->composerLockFile = realpath('../') . DIRECTORY_SEPARATOR . 'composer.lock';
         $this->knownLabels      = [
             '--- List of known labels' => '',
-            'ApacheInfo'               => ['getApacheDetails', null],
+            'Apache Info'              => ['getApacheDetails', null],
             'Auto Dependencies'        => ['getPackageDetailsFromGivenComposerLockFile', $this->composerLockFile],
-            'Auto Dependencies file'   => [$this->composerLockFile],
-            'ClientInfo'               => ['getClientBrowserDetailsForInformator', null],
-            'Informator file details'  => ['getFileDetails', __FILE__],
+            'Auto Dependencies File'   => [$this->composerLockFile],
+            'Client Info'              => ['getClientBrowserDetailsForInformator', null],
+            'Informator File Details'  => ['getFileDetails', __FILE__],
             'MySQL Databases All'      => ['getMySQLinfo', ['Databases All']],
             'MySQL Databases Client'   => ['getMySQLinfo', ['Databases Client']],
             'MySQL Engines Active'     => ['getMySQLinfo', ['Engines Active']],
             'MySQL Engines All'        => ['getMySQLinfo', ['Engines All']],
             'MySQL General'            => ['getMySQLinfo', ['General']],
             'MySQL Variables Global'   => ['getMySQLinfo', ['Variables Global']],
-            'MySQL info'               => ['getMySQLinfo', ['Engines Active', 'General', 'Variables Global']],
+            'MySQL Info'               => ['getMySQLinfo', ['Engines Active', 'General', 'Variables Global']],
             'Php Extensions Loaded'    => ['getPhpDetails', ['Extensions Loaded']],
             'Php General'              => ['getPhpDetails', ['General']],
             'Php INI Settings'         => ['getPhpDetails', ['INI Settings']],
             'Php Stream Filters'       => ['getPhpDetails', ['Stream Filters']],
             'Php Stream Transports'    => ['getPhpDetails', ['Stream Transports']],
             'Php Stream Wrappers'      => ['getPhpDetails', ['Stream Wrappers']],
-            'Php info'                 => ['getPhpDetails', null],
-            'ServerInfo'               => ['getServerDetails', null],
-            'SysInfo'                  => ['systemInfo', null],
-            'TomcatInfo'               => ['getTomcatDetails', null],
+            'Php Info'                 => ['getPhpDetails', null],
+            'Server Info'              => ['getServerDetails', null],
+            'System Info'              => ['systemInfo', null],
+            'Tomcat Info'              => ['getTomcatDetails', null],
         ];
         ksort($this->knownLabels);
         $rqst                   = new \Symfony\Component\HttpFoundation\Request;
@@ -87,13 +87,14 @@ class Informator
 
     private function getApacheDetails()
     {
-        $srvSoftwareArray = explode(' ', $_SERVER['SERVER_SOFTWARE']);
+        $srvSignature     = $_SERVER['SERVER_SOFTWARE'];
+        $srvSoftwareArray = explode(' ', $srvSignature);
         foreach ($srvSoftwareArray as $value) {
             $tmp = explode('/', $value);
             if (strpos($value, 'Apache') !== false) {
                 $sInfo['Apache'] = [
                     'Name'      => $tmp[0],
-                    'Signature' => $_SERVER['SERVER_SOFTWARE'],
+                    'Signature' => $srvSignature,
                     'Version'   => $tmp[1]
                 ];
             }
@@ -263,51 +264,62 @@ class Informator
 
     private function setInterface()
     {
-        $sReturn        = [];
-        $keysArray      = array_keys($this->knownLabels);
         $requestedLabel = $this->superGlobals->get('Label');
+        $showLabels     = true;
+        $feedback       = '<span style="background-color:red;color:white;">Label not set...</span>';
+        $arToReturn     = [];
         if (isset($requestedLabel)) {
-            if ($requestedLabel == '--- List of known labels') {
-                $this->setHeaderGZiped();
-                $this->setHeaderNoCache('application/json');
-                echo $this->setArrayToJson($keysArray);
-                $this->setFooterGZiped();
+            $feedback = '<span style="background-color:red;color:white;">'
+                    . 'There is no valid label transmited...</span>';
+            if (array_key_exists($requestedLabel, $this->knownLabels)) {
                 $showLabels = false;
-            } elseif (in_array($requestedLabel, $keysArray)) {
-                $this->setHeaderGZiped();
-                $this->setHeaderNoCache('application/json');
-                $lblValue = $this->knownLabels[$requestedLabel];
-                if (is_null($lblValue[1])) {
+                $feedback   = '';
+                $lblValue   = $this->knownLabels[$requestedLabel];
+                if ($requestedLabel == '--- List of known labels') {
+                    $arToReturn = array_keys($this->knownLabels);
+                } elseif ($requestedLabel == 'Auto Dependencies File') {
+                    $arToReturn = $lblValue;
+                } elseif (is_null($lblValue[1])) {
                     $arToReturn = call_user_func([$this, $lblValue[0]]);
                 } elseif (is_array($lblValue[1])) {
                     $arToReturn = call_user_func_array([$this, $lblValue[0]], [$lblValue[1]]);
                 } elseif (is_string($lblValue[1])) {
                     $arToReturn = call_user_func([$this, $lblValue[0]], $lblValue[1]);
                 }
-                echo $this->setArrayToJson($arToReturn);
-                $this->setFooterGZiped();
-                $showLabels = false;
-            } else {
-                $feedback   = '<span style="background-color:red;color:white;">There is no valid label transmited...';
-                $showLabels = true;
             }
-        } else {
-            $feedback   = '<span style="background-color:red;color:white;">Label not set...';
-            $showLabels = true;
         }
-        if ($showLabels) {
-            $sReturn[] = $this->setHeaderCommon([
+        $outputArray = [
+            'showLabels'    => $showLabels,
+            'feedback'      => $feedback,
+            'arrayToReturn' => $arToReturn,
+        ];
+        return $this->setOutputInterface($outputArray);
+    }
+
+    private function setOutputInterface($inArray)
+    {
+        if ($inArray['showLabels']) {
+            $sReturn[]  = $this->setHeaderCommon([
                 'lang'  => 'en-US',
                 'title' => 'Informator'
             ]);
-            $sReturn[] = $feedback . 'So you might want to choose one from the list below:</span>';
-            foreach ($keysArray as $value) {
-                $sReturn[] = '<br/>'
-                        . '<a href="?Label=' . urlencode($value) . '" target="_blank">' . $value . '</a>';
+            $sReturn[]  = $inArray['feedback'] . '<p style="background-color:green;color:white;">'
+                    . 'So you might want to choose one from the list below:</p>'
+                    . '<ul>';
+            $arToReturn = array_keys($this->knownLabels);
+            foreach ($arToReturn as $value) {
+                $sReturn[] = '<li>'
+                        . '<a href="?Label=' . urlencode($value) . '" target="_blank">' . $value . '</a>'
+                        . '</li>';
             }
-            $sReturn[] = $this->setFooterCommon();
+            $sReturn[] = '</ul>' . $this->setFooterCommon();
+            return implode('', $sReturn);
+        } elseif ($inArray['showLabels'] === false) {
+            $this->setHeaderGZiped();
+            $this->setHeaderNoCache('application/json');
+            echo $this->setArrayToJson($inArray['arrayToReturn']);
+            $this->setFooterGZiped();
         }
-        return implode('', $sReturn);
     }
 
     /**
