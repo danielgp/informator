@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<pmd version="@project.version@" timestamp="2016-01-01T22:42:15+02:00">
+  <file name="D:\Git\GitHub\danielgp.GitHub\informator\source\Informator.php">
+    <violation beginline="75" endline="95" rule="Superglobals" ruleset="Controversial Rules" package="danielgp\informator" externalInfoUrl="#" class="Informator" method="getApacheDetails" priority="1">
+      getApacheDetails accesses the super-global variable $_SERVER.
+    </violation>
+  </file>
+</pmd>
