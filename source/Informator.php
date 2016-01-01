@@ -61,15 +61,44 @@ class Informator
             'Php Stream Filters'       => ['getPhpDetails', ['Stream Filters']],
             'Php Stream Transports'    => ['getPhpDetails', ['Stream Transports']],
             'Php Stream Wrappers'      => ['getPhpDetails', ['Stream Wrappers']],
-            'Php Info'                 => ['getPhpDetails', null],
-            'Server Info'              => ['getServerDetails', null],
-            'System Info'              => ['systemInfo', null],
-            'Tomcat Info'              => ['getTomcatDetails', null],
+            'Php Info'                 => ['getPhpDetails'],
+            'Server Info'              => ['getServerDetails'],
+            'System Info'              => ['systemInfo'],
+            'Tomcat Info'              => ['getTomcatDetails'],
         ];
         ksort($this->informatorInternalArray['knownLabels']);
         $rqst                                              = new \Symfony\Component\HttpFoundation\Request;
         $this->informatorInternalArray['superGlobals']     = $rqst->createFromGlobals();
         echo $this->setInterface();
+    }
+
+    private function callDynamicFunctionToGetResults(array $inLabelsArray)
+    {
+        $aReturn = [];
+        switch (count($inLabelsArray)) {
+            case 1:
+                $aReturn = call_user_func([$this, $inLabelsArray[0]]);
+                break;
+            case 2:
+                if (is_array($inLabelsArray[1])) {
+                    $aReturn = call_user_func_array([$this, $inLabelsArray[0]], [$inLabelsArray[1]]);
+                }
+                if (!is_array($inLabelsArray[1])) {
+                    $standardPhpFunctions = [
+                        'get_loaded_extensions',
+                        'stream_get_filters',
+                        'stream_get_transports',
+                        'stream_get_wrappers',
+                    ];
+                    $dynFnPrmtr           = $inLabelsArray[1];
+                    if (in_array($inLabelsArray[1], $standardPhpFunctions)) {
+                        $dynFnPrmtr = call_user_func($inLabelsArray[1]);
+                    }
+                    $aReturn = call_user_func([$this, $inLabelsArray[0]], $dynFnPrmtr);
+                }
+                break;
+        }
+        return $aReturn;
     }
 
     private function getApacheDetails()
@@ -123,14 +152,13 @@ class Informator
     private function getMySQLinfo($returnType = ['Engines Active', 'General', 'Variables Global'])
     {
         if (is_null($this->mySQLconnection)) {
-            $mySQLconfig = [
+            $this->connectToMySql([
                 'host'     => MYSQL_HOST,
                 'port'     => MYSQL_PORT,
                 'username' => MYSQL_USERNAME,
                 'password' => MYSQL_PASSWORD,
                 'database' => MYSQL_DATABASE,
-            ];
-            $this->connectToMySql($mySQLconfig);
+            ]);
         }
         $sInfo           = [];
         $aMySQLinfoLabel = [
@@ -142,15 +170,7 @@ class Informator
             'Variables Global' => ['getMySQLglobalVariables'],
         ];
         foreach ($returnType as $value) {
-            $aVal = $aMySQLinfoLabel[$value];
-            switch (count($aVal)) {
-                case 1:
-                    $sInfo['MySQL'][$value] = call_user_func([$this, $aVal[0]]);
-                    break;
-                case 2:
-                    $sInfo['MySQL'][$value] = call_user_func([this, $aVal[0]], $aVal[1]);
-                    break;
-            }
+            $sInfo['MySQL'][$value] = $this->callDynamicFunctionToGetResults($aMySQLinfoLabel[$value]);
         }
         ksort($sInfo['MySQL']);
         return $sInfo['MySQL'];
@@ -161,9 +181,6 @@ class Informator
         $sInfo = [];
         foreach ($returnType as $value) {
             switch ($value) {
-                case 'Extensions Loaded':
-                    $sInfo['PHP'][$value] = $this->setArrayValuesAsKey(get_loaded_extensions());
-                    break;
                 case 'General':
                     $sInfo['PHP'][$value] = [
                         'Version'             => phpversion(),
@@ -173,20 +190,15 @@ class Informator
                 case 'INI Settings':
                     $sInfo['PHP'][$value] = ini_get_all(null, false);
                     break;
-                case 'Stream Filters':
-                    $sArray               = (array) stream_get_filters();
-                    $sInfo['PHP'][$value] = $this->setArrayValuesAsKey($sArray);
-                    break;
-                case 'Stream Transports':
-                    $sArray               = (array) stream_get_transports();
-                    $sInfo['PHP'][$value] = $this->setArrayValuesAsKey($sArray);
-                    break;
-                case 'Stream Wrappers':
-                    $sArray               = (array) stream_get_wrappers();
-                    $sInfo['PHP'][$value] = $this->setArrayValuesAsKey($sArray);
-                    break;
-                case 'Temporary Folder':
-                    $sInfo['PHP'][$value] = $this->getTemporaryFolder();
+                default:
+                    $stLabels             = [
+                        'Extensions Loaded' => ['setArrayValuesAsKey', 'get_loaded_extensions'],
+                        'Stream Filters'    => ['setArrayValuesAsKey', 'stream_get_filters'],
+                        'Stream Transports' => ['setArrayValuesAsKey', 'stream_get_transports'],
+                        'Stream Wrappers'   => ['setArrayValuesAsKey', 'stream_get_wrappers'],
+                        'Temporary Folder'  => ['getTemporaryFolder'],
+                    ];
+                    $sInfo['PHP'][$value] = $this->callDynamicFunctionToGetResults($stLabels[$value]);
                     break;
             }
         }
@@ -276,12 +288,9 @@ class Informator
                     $arToReturn = $lblValue;
                 } elseif ($requestedLabel == 'System Info') {
                     $arToReturn = $this->systemInfo();
-                } elseif (is_null($lblValue[1])) {
-                    $arToReturn = call_user_func([$this, $lblValue[0]]);
-                } elseif (is_array($lblValue[1])) {
-                    $arToReturn = call_user_func_array([$this, $lblValue[0]], [$lblValue[1]]);
-                } elseif (is_string($lblValue[1])) {
-                    $arToReturn = call_user_func([$this, $lblValue[0]], $lblValue[1]);
+                }
+                if ($arToReturn == []) {
+                    $arToReturn = $this->callDynamicFunctionToGetResults($lblValue);
                 }
             }
         }
