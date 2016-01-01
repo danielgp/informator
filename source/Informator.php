@@ -251,10 +251,8 @@ class Informator
         $url               = 'http://' . $this->informatorInternalArray['superGlobals']->getHttpHost()
                 . ':8080/informator.Tomcat/index.jsp';
         $urlFeedback       = $this->getContentFromUrlThroughCurlAsArrayIfJson($url);
-        if (is_array($urlFeedback)) {
-            if (isset($urlFeedback['response'])) {
-                $sReturn['Tomcat'] = $urlFeedback['response'];
-            }
+        if (is_array($urlFeedback) && isset($urlFeedback['response'])) {
+            $sReturn['Tomcat'] = $urlFeedback['response'];
         }
         return $sReturn;
     }
@@ -276,6 +274,8 @@ class Informator
                     $arToReturn = array_keys($this->informatorInternalArray['knownLabels']);
                 } elseif ($requestedLabel == 'Auto Dependencies File') {
                     $arToReturn = $lblValue;
+                } elseif ($requestedLabel == 'System Info') {
+                    $arToReturn = $this->systemInfo();
                 } elseif (is_null($lblValue[1])) {
                     $arToReturn = call_user_func([$this, $lblValue[0]]);
                 } elseif (is_array($lblValue[1])) {
