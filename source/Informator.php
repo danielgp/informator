@@ -113,11 +113,9 @@ class Informator
     {
         $tmpFolder        = $this->getTemporaryFolder();
         $tmpDoctrineCache = null;
-        if (is_dir($tmpFolder)) {
-            clearstatcache();
-            if (is_writable($tmpFolder)) {
-                $tmpDoctrineCache = $tmpFolder . DIRECTORY_SEPARATOR . 'DoctrineCache';
-            }
+        clearstatcache();
+        if (is_dir($tmpFolder) && is_writable($tmpFolder)) {
+            $tmpDoctrineCache = $tmpFolder . DIRECTORY_SEPARATOR . 'DoctrineCache';
         }
         return $this->getClientBrowserDetails(['Browser', 'Device', 'OS'], $tmpDoctrineCache);
     }
@@ -134,26 +132,23 @@ class Informator
             ];
             $this->connectToMySql($mySQLconfig);
         }
-        $sInfo = [];
+        $sInfo           = [];
+        $aMySQLinfoLabel = [
+            'Databases All'    => ['getMySQLlistDatabases', false],
+            'Databases Client' => ['getMySQLlistDatabases', true],
+            'Engines Active'   => ['getMySQLlistEngines', true],
+            'Engines All'      => ['getMySQLlistEngines', false],
+            'General'          => ['getMySQLgenericInformations'],
+            'Variables Global' => ['getMySQLglobalVariables'],
+        ];
         foreach ($returnType as $value) {
-            switch ($value) {
-                case 'Databases All':
-                    $sInfo['MySQL']['Databases All']    = $this->getMySQLlistDatabases(false);
+            $aVal = $aMySQLinfoLabel[$value];
+            switch (count($aVal)) {
+                case 1:
+                    $sInfo['MySQL'][$value] = call_user_func([$this, $aVal[0]]);
                     break;
-                case 'Databases Client':
-                    $sInfo['MySQL']['Databases Client'] = $this->getMySQLlistDatabases(true);
-                    break;
-                case 'Engines Active':
-                    $sInfo['MySQL']['Engines Active']   = $this->getMySQLlistEngines(true);
-                    break;
-                case 'Engines All':
-                    $sInfo['MySQL']['Engines All']      = $this->getMySQLlistEngines(false);
-                    break;
-                case 'General':
-                    $sInfo['MySQL']['General']          = $this->getMySQLgenericInformations();
-                    break;
-                case 'Variables Global':
-                    $sInfo['MySQL']['Variables Global'] = $this->getMySQLglobalVariables();
+                case 2:
+                    $sInfo['MySQL'][$value] = call_user_func([this, $aVal[0]], $aVal[1]);
                     break;
             }
         }
@@ -265,7 +260,8 @@ class Informator
         $arToReturn     = [];
         if (isset($requestedLabel)) {
             $feedback = '<span style="background-color:red;color:white;">'
-                    . 'There is no valid label transmited...</span>';
+                    . 'Unknown label transmited...'
+                    . '</span>';
             if (array_key_exists($requestedLabel, $this->informatorInternalArray['knownLabels'])) {
                 $showLabels = false;
                 $feedback   = '';
