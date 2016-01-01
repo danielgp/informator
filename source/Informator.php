@@ -33,18 +33,19 @@ class Informator
 
     use \danielgp\common_lib\CommonCode;
 
-    private $knownLabels;
-    private $composerLockFile;
-    private $superGlobals;
+    private $informatorInternalArray;
 
     public function __construct()
     {
-        $this->composerLockFile = realpath('../') . DIRECTORY_SEPARATOR . 'composer.lock';
-        $this->knownLabels      = [
+        $this->informatorInternalArray['composerLockFile'] = realpath('../') . DIRECTORY_SEPARATOR . 'composer.lock';
+        $this->informatorInternalArray['knownLabels']      = [
             '--- List of known labels' => '',
             'Apache Info'              => ['getApacheDetails', null],
-            'Auto Dependencies'        => ['getPackageDetailsFromGivenComposerLockFile', $this->composerLockFile],
-            'Auto Dependencies File'   => [$this->composerLockFile],
+            'Auto Dependencies'        => [
+                'getPackageDetailsFromGivenComposerLockFile',
+                $this->informatorInternalArray['composerLockFile'],
+            ],
+            'Auto Dependencies File'   => [$this->informatorInternalArray['composerLockFile']],
             'Client Info'              => ['getClientBrowserDetailsForInformator', null],
             'Informator File Details'  => ['getFileDetails', __FILE__],
             'MySQL Databases All'      => ['getMySQLinfo', ['Databases All']],
@@ -65,24 +66,10 @@ class Informator
             'System Info'              => ['systemInfo', null],
             'Tomcat Info'              => ['getTomcatDetails', null],
         ];
-        ksort($this->knownLabels);
-        $rqst                   = new \Symfony\Component\HttpFoundation\Request;
-        $this->superGlobals     = $rqst->createFromGlobals();
+        ksort($this->informatorInternalArray['knownLabels']);
+        $rqst                                              = new \Symfony\Component\HttpFoundation\Request;
+        $this->informatorInternalArray['superGlobals']     = $rqst->createFromGlobals();
         echo $this->setInterface();
-    }
-
-    protected function connectToMySqlServer()
-    {
-        if (is_null($this->mySQLconnection)) {
-            $mySQLconfig = [
-                'host'     => MYSQL_HOST,
-                'port'     => MYSQL_PORT,
-                'username' => MYSQL_USERNAME,
-                'password' => MYSQL_PASSWORD,
-                'database' => MYSQL_DATABASE,
-            ];
-            $this->connectToMySql($mySQLconfig);
-        }
     }
 
     private function getApacheDetails()
@@ -137,7 +124,16 @@ class Informator
 
     private function getMySQLinfo($returnType = ['Engines Active', 'General', 'Variables Global'])
     {
-        $this->connectToMySqlServer();
+        if (is_null($this->mySQLconnection)) {
+            $mySQLconfig = [
+                'host'     => MYSQL_HOST,
+                'port'     => MYSQL_PORT,
+                'username' => MYSQL_USERNAME,
+                'password' => MYSQL_PASSWORD,
+                'database' => MYSQL_DATABASE,
+            ];
+            $this->connectToMySql($mySQLconfig);
+        }
         $sInfo = [];
         foreach ($returnType as $value) {
             switch ($value) {
@@ -205,7 +201,7 @@ class Informator
         $serverMachineType = 'unknown';
         $serverInfo        = [
             'name'    => 'undisclosed',
-            'host'    => $this->superGlobals->getHttpHost(),
+            'host'    => $this->informatorInternalArray['superGlobals']->getHttpHost(),
             'release' => 'undisclosed',
             'version' => 'undisclosed',
         ];
@@ -252,7 +248,8 @@ class Informator
     private function getTomcatDetails()
     {
         $sReturn['Tomcat'] = '---';
-        $url               = 'http://' . $this->superGlobals->getHttpHost() . ':8080/informator.Tomcat/index.jsp';
+        $url               = 'http://' . $this->informatorInternalArray['superGlobals']->getHttpHost()
+                . ':8080/informator.Tomcat/index.jsp';
         $urlFeedback       = $this->getContentFromUrlThroughCurlAsArrayIfJson($url);
         if (is_array($urlFeedback)) {
             if (isset($urlFeedback['response'])) {
@@ -264,19 +261,19 @@ class Informator
 
     private function setInterface()
     {
-        $requestedLabel = $this->superGlobals->get('Label');
+        $requestedLabel = $this->informatorInternalArray['superGlobals']->get('Label');
         $showLabels     = true;
         $feedback       = '<span style="background-color:red;color:white;">Label not set...</span>';
         $arToReturn     = [];
         if (isset($requestedLabel)) {
             $feedback = '<span style="background-color:red;color:white;">'
                     . 'There is no valid label transmited...</span>';
-            if (array_key_exists($requestedLabel, $this->knownLabels)) {
+            if (array_key_exists($requestedLabel, $this->informatorInternalArray['knownLabels'])) {
                 $showLabels = false;
                 $feedback   = '';
-                $lblValue   = $this->knownLabels[$requestedLabel];
+                $lblValue   = $this->informatorInternalArray['knownLabels'][$requestedLabel];
                 if ($requestedLabel == '--- List of known labels') {
-                    $arToReturn = array_keys($this->knownLabels);
+                    $arToReturn = array_keys($this->informatorInternalArray['knownLabels']);
                 } elseif ($requestedLabel == 'Auto Dependencies File') {
                     $arToReturn = $lblValue;
                 } elseif (is_null($lblValue[1])) {
@@ -306,7 +303,7 @@ class Informator
             $sReturn[]  = $inArray['feedback'] . '<p style="background-color:green;color:white;">'
                     . 'So you might want to choose one from the list below:</p>'
                     . '<ul>';
-            $arToReturn = array_keys($this->knownLabels);
+            $arToReturn = array_keys($this->informatorInternalArray['knownLabels']);
             foreach ($arToReturn as $value) {
                 $sReturn[] = '<li>'
                         . '<a href="?Label=' . urlencode($value) . '" target="_blank">' . $value . '</a>'
@@ -327,11 +324,12 @@ class Informator
      * @param  boolean $full
      * @return array
      */
-    protected function systemInfo()
+    private function systemInfo()
     {
+        $cFile = $this->informatorInternalArray['composerLockFile'];
         return [
             'Apache'            => $this->getApacheDetails(),
-            'Auto Dependencies' => $this->getPackageDetailsFromGivenComposerLockFile($this->composerLockFile),
+            'Auto Dependencies' => $this->getPackageDetailsFromGivenComposerLockFile($cFile),
             'Client'            => $this->getClientBrowserDetailsForInformator(),
             'InfoCompareFile'   => $this->getFileDetails(__FILE__),
             'MySQL'             => $this->getMySQLinfo(),
