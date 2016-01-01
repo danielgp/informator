@@ -76,6 +76,7 @@ class Informator
     {
         $srvSignature     = $_SERVER['SERVER_SOFTWARE'];
         $srvSoftwareArray = explode(' ', $srvSignature);
+        $sInfo            = [];
         foreach ($srvSoftwareArray as $value) {
             $tmp = explode('/', $value);
             if (strpos($value, 'Apache') !== false) {
@@ -220,7 +221,7 @@ class Informator
                 'version' => php_uname('v'),
             ];
         }
-        $srvIp = $_SERVER['SERVER_ADDR'];
+        $srvIp = gethostbyname($this->informatorInternalArray['superGlobals']->getHttpHost());
         return [
             'OS'              => php_uname(),
             'OS Architecture' => $serverMachineType,
@@ -316,7 +317,6 @@ class Informator
 
     /**
      * Builds an array with most important key aspects of LAMP/WAMP
-     * @param  boolean $full
      * @return array
      */
     private function systemInfo()
