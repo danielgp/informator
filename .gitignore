@@ -2,3 +2,4 @@
 /vendor/
 /www.pgd.ro/
 /tmp/
+/composer.lock
