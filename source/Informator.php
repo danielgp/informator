@@ -31,7 +31,8 @@ namespace danielgp\informator;
 class Informator
 {
 
-    use \danielgp\common_lib\CommonCode;
+    use \danielgp\common_lib\CommonCode,
+        \danielgp\informator\InformatorDynamicFunctions;
 
     private $informatorInternalArray;
 
@@ -40,7 +41,7 @@ class Informator
         $this->informatorInternalArray['composerLockFile'] = realpath('../') . DIRECTORY_SEPARATOR . 'composer.lock';
         $this->informatorInternalArray['knownLabels']      = [
             '--- List of known labels' => '',
-            'Apache Info'              => ['getApacheDetails', null],
+            'Apache Info'              => ['getApacheDetails'],
             'Auto Dependencies'        => [
                 'getPackageDetailsFromGivenComposerLockFile',
                 $this->informatorInternalArray['composerLockFile'],
@@ -70,35 +71,6 @@ class Informator
         $rqst                                              = new \Symfony\Component\HttpFoundation\Request;
         $this->informatorInternalArray['superGlobals']     = $rqst->createFromGlobals();
         echo $this->setInterface();
-    }
-
-    private function callDynamicFunctionToGetResults(array $inLabelsArray)
-    {
-        $aReturn = [];
-        switch (count($inLabelsArray)) {
-            case 1:
-                $aReturn = call_user_func([$this, $inLabelsArray[0]]);
-                break;
-            case 2:
-                if (is_array($inLabelsArray[1])) {
-                    $aReturn = call_user_func_array([$this, $inLabelsArray[0]], [$inLabelsArray[1]]);
-                }
-                if (!is_array($inLabelsArray[1])) {
-                    $standardPhpFunctions = [
-                        'get_loaded_extensions',
-                        'stream_get_filters',
-                        'stream_get_transports',
-                        'stream_get_wrappers',
-                    ];
-                    $dynFnPrmtr           = $inLabelsArray[1];
-                    if (in_array($inLabelsArray[1], $standardPhpFunctions)) {
-                        $dynFnPrmtr = call_user_func($inLabelsArray[1]);
-                    }
-                    $aReturn = call_user_func([$this, $inLabelsArray[0]], $dynFnPrmtr);
-                }
-                break;
-        }
-        return $aReturn;
     }
 
     private function getApacheDetails()

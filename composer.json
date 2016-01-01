@@ -24,6 +24,7 @@
             "DeviceDetector\\" : "vendor/piwik/device-detector/"
         },
         "classmap": [
+            "source/InformatorDynamicFunctions.php",
             "source/Informator.php"
         ]
     },
