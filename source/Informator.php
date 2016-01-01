@@ -311,12 +311,11 @@ class Informator
             }
             $sReturn[] = '</ul>' . $this->setFooterCommon();
             return implode('', $sReturn);
-        } elseif ($inArray['showLabels'] === false) {
-            $this->setHeaderGZiped();
-            $this->setHeaderNoCache('application/json');
-            echo $this->setArrayToJson($inArray['arrayToReturn']);
-            $this->setFooterGZiped();
         }
+        $this->setHeaderGZiped();
+        $this->setHeaderNoCache('application/json');
+        echo $this->setArrayToJson($inArray['arrayToReturn']);
+        $this->setFooterGZiped();
     }
 
     /**
