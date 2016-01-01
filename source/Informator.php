@@ -175,13 +175,16 @@ class Informator
                     $sInfo['PHP'][$value] = ini_get_all(null, false);
                     break;
                 case 'Stream Filters':
-                    $sInfo['PHP'][$value] = $this->setArrayValuesAsKey(stream_get_filters());
+                    $sArray               = (array) stream_get_filters();
+                    $sInfo['PHP'][$value] = $this->setArrayValuesAsKey($sArray);
                     break;
                 case 'Stream Transports':
-                    $sInfo['PHP'][$value] = $this->setArrayValuesAsKey(stream_get_transports());
+                    $sArray               = (array) stream_get_transports();
+                    $sInfo['PHP'][$value] = $this->setArrayValuesAsKey($sArray);
                     break;
                 case 'Stream Wrappers':
-                    $sInfo['PHP'][$value] = $this->setArrayValuesAsKey(stream_get_wrappers());
+                    $sArray               = (array) stream_get_wrappers();
+                    $sInfo['PHP'][$value] = $this->setArrayValuesAsKey($sArray);
                     break;
                 case 'Temporary Folder':
                     $sInfo['PHP'][$value] = $this->getTemporaryFolder();
@@ -243,6 +246,7 @@ class Informator
 
     private function getTomcatDetails()
     {
+        $sReturn           = [];
         $sReturn['Tomcat'] = '---';
         $url               = 'http://' . $this->informatorInternalArray['superGlobals']->getHttpHost()
                 . ':8080/informator.Tomcat/index.jsp';
@@ -293,6 +297,7 @@ class Informator
     private function setOutputInterface($inArray)
     {
         if ($inArray['showLabels']) {
+            $sReturn    = [];
             $sReturn[]  = $this->setHeaderCommon([
                 'lang'  => 'en-US',
                 'title' => 'Informator'
