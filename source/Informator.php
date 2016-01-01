@@ -209,33 +209,19 @@ class Informator
     private function getServerDetails()
     {
         $serverMachineType = 'unknown';
+        $hst               = $this->informatorInternalArray['superGlobals']->getHttpHost();
         $serverInfo        = [
             'name'    => 'undisclosed',
-            'host'    => $this->informatorInternalArray['superGlobals']->getHttpHost(),
+            'host'    => $hst,
             'release' => 'undisclosed',
             'version' => 'undisclosed',
         ];
         if (function_exists('php_uname')) {
-            switch (php_uname('m')) {
-                case 'AMD64':
-                    $serverMachineType = 'x64 (64 bit)';
-                    break;
-                case 'i386':
-                case 'i586':
-                    $serverMachineType = 'x86 (32 bit)';
-                    break;
-                default:
-                    $serverMachineType = php_uname('m');
-                    break;
-            }
-            $serverInfo = [
-                'name'    => php_uname('s'),
-                'host'    => php_uname('n'),
-                'release' => php_uname('r'),
-                'version' => php_uname('v'),
-            ];
+            $infServerFromPhp  = $this->getServerDetailsFromPhp();
+            $serverMachineType = $infServerFromPhp['OS Architecture'];
+            $serverInfo        = $infServerFromPhp['OS Name+Host+Release+Version'];
         }
-        $srvIp = gethostbyname($this->informatorInternalArray['superGlobals']->getHttpHost());
+        $srvIp = filter_var(gethostbyname($hst), FILTER_VALIDATE_IP);
         return [
             'OS'              => php_uname(),
             'OS Architecture' => $serverMachineType,
@@ -248,6 +234,30 @@ class Informator
             'OS Release'      => $serverInfo['release'],
             'OS Version'      => $serverInfo['version'],
         ];
+    }
+
+    private function getServerDetailsFromPhp()
+    {
+        $aReturn = [];
+        switch (php_uname('m')) {
+            case 'AMD64':
+                $aReturn['OS Architecture'] = 'x64 (64 bit)';
+                break;
+            case 'i386':
+            case 'i586':
+                $aReturn['OS Architecture'] = 'x86 (32 bit)';
+                break;
+            default:
+                $aReturn['OS Architecture'] = php_uname('m');
+                break;
+        }
+        $aReturn['OS Name+Host+Release+Version'] = [
+            'name'    => php_uname('s'),
+            'host'    => php_uname('n'),
+            'release' => php_uname('r'),
+            'version' => php_uname('v'),
+        ];
+        return $aReturn;
     }
 
     private function getTemporaryFolder()
