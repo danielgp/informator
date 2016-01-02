@@ -29,35 +29,6 @@ namespace danielgp\informator;
 trait InformatorKnownLabels
 {
 
-    protected function knownLabelsGlobal($inArray)
-    {
-        return [
-            '--- List of known labels' => '',
-            'Apache Info'              => ['getApacheDetails'],
-            'Auto Dependencies'        => ['getPackageDetailsFromGivenComposerLockFile', $inArray['composerLockFile']],
-            'Auto Dependencies File'   => [$inArray['composerLockFile']],
-            'Client Info'              => ['getClientBrowserDetailsForInformator', null],
-            'Informator File Details'  => ['getFileDetails', $inArray['informatorFile']],
-            'MySQL Databases All'      => ['getMySQLinfo', ['Databases All']],
-            'MySQL Databases Client'   => ['getMySQLinfo', ['Databases Client']],
-            'MySQL Engines Active'     => ['getMySQLinfo', ['Engines Active']],
-            'MySQL Engines All'        => ['getMySQLinfo', ['Engines All']],
-            'MySQL General'            => ['getMySQLinfo', ['General']],
-            'MySQL Variables Global'   => ['getMySQLinfo', ['Variables Global']],
-            'MySQL Info'               => ['getMySQLinfo', ['Engines Active', 'General', 'Variables Global']],
-            'Php Extensions Loaded'    => ['getPhpDetails', ['Extensions Loaded']],
-            'Php General'              => ['getPhpDetails', ['General']],
-            'Php INI Settings'         => ['getPhpDetails', ['INI Settings']],
-            'Php Stream Filters'       => ['getPhpDetails', ['Stream Filters']],
-            'Php Stream Transports'    => ['getPhpDetails', ['Stream Transports']],
-            'Php Stream Wrappers'      => ['getPhpDetails', ['Stream Wrappers']],
-            'Php Info'                 => ['getPhpDetails'],
-            'Server Info'              => ['getServerDetails'],
-            'System Info'              => ['systemInfo'],
-            'Tomcat Info'              => ['getTomcatDetails'],
-        ];
-    }
-
     protected function knownLabelsForMySql()
     {
         return [
@@ -78,6 +49,48 @@ trait InformatorKnownLabels
             'Stream Transports' => ['setArrayValuesAsKey', 'stream_get_transports'],
             'Stream Wrappers'   => ['setArrayValuesAsKey', 'stream_get_wrappers'],
             'Temporary Folder'  => ['getTemporaryFolder'],
+        ];
+    }
+
+    protected function knownLabelsGlobal($inArray)
+    {
+        $aReturn = [
+            '--- List of known labels' => '',
+            'Apache Info'              => ['getApacheDetails'],
+            'Auto Dependencies'        => ['getPackageDetailsFromGivenComposerLockFile', $inArray['composerLockFile']],
+            'Auto Dependencies File'   => [$inArray['composerLockFile']],
+            'Client Info'              => ['getClientBrowserDetailsForInformator', null],
+            'Informator File Details'  => ['getFileDetails', $inArray['informatorFile']],
+            'Server Info'              => ['getServerDetails'],
+            'System Info'              => ['systemInfo'],
+            'Tomcat Info'              => ['getTomcatDetails'],
+        ];
+        return array_merge($aReturn, array_merge($this->subLabelsMySql(), $this->subLabelsPhp()));
+    }
+
+    private function subLabelsMySql()
+    {
+        return [
+            'MySQL Databases All'    => ['getMySQLinfo', ['Databases All']],
+            'MySQL Databases Client' => ['getMySQLinfo', ['Databases Client']],
+            'MySQL Engines Active'   => ['getMySQLinfo', ['Engines Active']],
+            'MySQL Engines All'      => ['getMySQLinfo', ['Engines All']],
+            'MySQL General'          => ['getMySQLinfo', ['General']],
+            'MySQL Variables Global' => ['getMySQLinfo', ['Variables Global']],
+            'MySQL Info'             => ['getMySQLinfo', ['Engines Active', 'General', 'Variables Global']],
+        ];
+    }
+
+    private function subLabelsPhp()
+    {
+        return [
+            'Php Extensions Loaded' => ['getPhpDetails', ['Extensions Loaded']],
+            'Php General'           => ['getPhpDetails', ['General']],
+            'Php INI Settings'      => ['getPhpDetails', ['INI Settings']],
+            'Php Stream Filters'    => ['getPhpDetails', ['Stream Filters']],
+            'Php Stream Transports' => ['getPhpDetails', ['Stream Transports']],
+            'Php Stream Wrappers'   => ['getPhpDetails', ['Stream Wrappers']],
+            'Php Info'              => ['getPhpDetails'],
         ];
     }
 }

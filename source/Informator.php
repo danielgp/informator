@@ -105,7 +105,7 @@ class Informator
         return $this->getClientBrowserDetails(['Browser', 'Device', 'OS'], $this->getDoctrineCaheFolder());
     }
 
-    private function getMySQLinfo($returnType = ['Engines Active', 'General', 'Variables Global'])
+    private function getMySQLinfo($returnType)
     {
         $this->connectToMySqlForInformation();
         $sInfo = [];
@@ -120,23 +120,29 @@ class Informator
     {
         $sInfo = [];
         foreach ($returnType as $value) {
-            switch ($value) {
-                case 'General':
-                    $sInfo['PHP'][$value] = [
-                        'Version'             => phpversion(),
-                        'Zend Engine Version' => zend_version(),
-                    ];
-                    break;
-                case 'INI Settings':
-                    $sInfo['PHP'][$value] = ini_get_all(null, false);
-                    break;
-                default:
-                    $sInfo['PHP'][$value] = $this->callDynamicFunctionToGetResults($this->knownLabelsForPhp()[$value]);
-                    break;
-            }
+            $sInfo['PHP'][$value] = $this->getPhpDetailsIndividually($value);
         }
         ksort($sInfo['PHP']);
         return $sInfo['PHP'];
+    }
+
+    private function getPhpDetailsIndividually($value)
+    {
+        switch ($value) {
+            case 'General':
+                $sInfo = [
+                    'Version'             => phpversion(),
+                    'Zend Engine Version' => zend_version(),
+                ];
+                break;
+            case 'INI Settings':
+                $sInfo = ini_get_all(null, false);
+                break;
+            default:
+                $sInfo = $this->callDynamicFunctionToGetResults($this->knownLabelsForPhp()[$value]);
+                break;
+        }
+        return $sInfo;
     }
 
     private function getServerDetails()
