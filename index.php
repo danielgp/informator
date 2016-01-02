@@ -25,18 +25,6 @@
  * SOFTWARE.
  *
  */
-if (!defined('MYSQL_HOST')) {
-    define('MYSQL_HOST', '127.0.0.1');
-}
-if (!defined('MYSQL_PORT')) {
-    define('MYSQL_PORT', 5700);
-}
-if (!defined('MYSQL_USERNAME')) {
-    define('MYSQL_USERNAME', 'web_3rdparty_inf');
-}
-if (!defined('MYSQL_PASSWORD')) {
-    define('MYSQL_PASSWORD', 'G6FTigKY(&w{8yquWV%SMe`\?z+(sJ');
-}
-if (!defined('MYSQL_DATABASE')) {
-    define('MYSQL_DATABASE', 'mysql');
-}
+require_once 'vendor/autoload.php';
+
+$app = new \danielgp\informator\Informator();

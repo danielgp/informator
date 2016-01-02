@@ -34,7 +34,8 @@ class Informator
     use \danielgp\common_lib\CommonCode,
         InformatorDynamicFunctions,
         InformatorKnownLabels,
-        InformatorServer;
+        InformatorServer,
+        ConfigurationMySQL;
 
     private $informatorInternalArray;
 
@@ -54,13 +55,7 @@ class Informator
     private function connectToMySqlForInformation()
     {
         if (is_null($this->mySQLconnection)) {
-            $this->connectToMySql([
-                'host'     => MYSQL_HOST,
-                'port'     => MYSQL_PORT,
-                'username' => MYSQL_USERNAME,
-                'password' => MYSQL_PASSWORD,
-                'database' => MYSQL_DATABASE,
-            ]);
+            $this->connectToMySql($this->configuredMySqlServer());
         }
     }
 
