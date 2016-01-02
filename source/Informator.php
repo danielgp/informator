@@ -277,7 +277,6 @@ class Informator
 
     private function performLabelDefinition($requestedLabel, $lblValue)
     {
-        $arToReturn = [];
         switch ($requestedLabel) {
             case '--- List of known labels':
                 $arToReturn = array_keys($this->informatorInternalArray['knownLabels']);
