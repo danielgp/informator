@@ -37,6 +37,7 @@ trait InformatorKnownLabels
             'Engines Active'   => ['getMySQLlistEngines', true],
             'Engines All'      => ['getMySQLlistEngines', false],
             'General'          => ['getMySQLgenericInformations'],
+            'Statistics'       => ['getMySQLStatistics'],
             'Variables Global' => ['getMySQLglobalVariables'],
         ];
     }
@@ -76,8 +77,9 @@ trait InformatorKnownLabels
             'MySQL Engines Active'   => ['getMySQLinfo', ['Engines Active']],
             'MySQL Engines All'      => ['getMySQLinfo', ['Engines All']],
             'MySQL General'          => ['getMySQLinfo', ['General']],
-            'MySQL Variables Global' => ['getMySQLinfo', ['Variables Global']],
             'MySQL Info'             => ['getMySQLinfo'],
+            'MySQL Statistics'       => ['getMySQLinfo', ['Statistics']],
+            'MySQL Variables Global' => ['getMySQLinfo', ['Variables Global']],
         ];
     }
 
@@ -87,10 +89,10 @@ trait InformatorKnownLabels
             'Php Extensions Loaded' => ['getPhpDetails', ['Extensions Loaded']],
             'Php General'           => ['getPhpDetails', ['General']],
             'Php INI Settings'      => ['getPhpDetails', ['INI Settings']],
+            'Php Info'              => ['getPhpDetails'],
             'Php Stream Filters'    => ['getPhpDetails', ['Stream Filters']],
             'Php Stream Transports' => ['getPhpDetails', ['Stream Transports']],
             'Php Stream Wrappers'   => ['getPhpDetails', ['Stream Wrappers']],
-            'Php Info'              => ['getPhpDetails'],
         ];
     }
 }
