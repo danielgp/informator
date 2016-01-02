@@ -264,16 +264,7 @@ class Informator
                 $showLabels = false;
                 $feedback   = '';
                 $lblValue   = $this->informatorInternalArray['knownLabels'][$requestedLabel];
-                if ($requestedLabel == '--- List of known labels') {
-                    $arToReturn = array_keys($this->informatorInternalArray['knownLabels']);
-                } elseif ($requestedLabel == 'Auto Dependencies File') {
-                    $arToReturn = $lblValue;
-                } elseif ($requestedLabel == 'System Info') {
-                    $arToReturn = $this->systemInfo();
-                }
-                if ($arToReturn == []) {
-                    $arToReturn = $this->callDynamicFunctionToGetResults($lblValue);
-                }
+                $arToReturn = $this->performLabelDefinition($requestedLabel, $lblValue);
             }
         }
         $outputArray = [
@@ -282,6 +273,26 @@ class Informator
             'arrayToReturn' => $arToReturn,
         ];
         return $this->setOutputInterface($outputArray);
+    }
+
+    private function performLabelDefinition($requestedLabel, $lblValue)
+    {
+        $arToReturn = [];
+        switch ($requestedLabel) {
+            case '--- List of known labels':
+                $arToReturn = array_keys($this->informatorInternalArray['knownLabels']);
+                break;
+            case 'Auto Dependencies File':
+                $arToReturn = $lblValue;
+                break;
+            case 'System Info':
+                $arToReturn = $this->systemInfo();
+                break;
+            default:
+                $arToReturn = $this->callDynamicFunctionToGetResults($lblValue);
+                break;
+        }
+        return $arToReturn;
     }
 
     private function setOutputInterface($inArray)

@@ -34,14 +34,13 @@ trait InformatorDynamicFunctions
         switch (count($inLabelsArray)) {
             case 1:
                 return call_user_func([$this, $inLabelsArray[0]]);
-                break;
+            // intentionlly left open since prior line is a return
             case 2:
                 if (is_array($inLabelsArray[1])) {
                     return call_user_func_array([$this, $inLabelsArray[0]], [$inLabelsArray[1]]);
                 }
                 $dynFnPrmtr = $this->evaluateParameterAgainstKnownFunctions($inLabelsArray[1]);
                 return call_user_func([$this, $inLabelsArray[0]], $dynFnPrmtr);
-                break;
         }
     }
 
