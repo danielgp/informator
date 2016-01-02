@@ -32,7 +32,8 @@ class Informator
 {
 
     use \danielgp\common_lib\CommonCode,
-        \danielgp\informator\InformatorDynamicFunctions;
+        InformatorDynamicFunctions,
+        InformatorServer;
 
     private $informatorInternalArray;
 
@@ -75,14 +76,13 @@ class Informator
 
     private function getApacheDetails()
     {
-        $srvSignature     = $_SERVER['SERVER_SOFTWARE'];
-        $srvSoftwareArray = explode(' ', $srvSignature);
+        $srvSoftwareArray = explode(' ', $this->getServerSoftware());
         $sInfo            = [];
         $tmp              = explode('/', $srvSoftwareArray[0]);
         if (strpos($srvSoftwareArray[0], 'Apache') !== false) {
             $sInfo['Apache'] = [
                 'Name'      => $tmp[0],
-                'Signature' => $srvSignature,
+                'Signature' => $this->getServerSoftware(),
                 'Version'   => $tmp[1]
             ];
         }
@@ -210,18 +210,15 @@ class Informator
 
     private function getServerDetailsFromPhp()
     {
-        $aReturn = [];
-        switch (php_uname('m')) {
-            case 'AMD64':
-                $aReturn['OS Architecture'] = 'x64 (64 bit)';
-                break;
-            case 'i386':
-            case 'i586':
-                $aReturn['OS Architecture'] = 'x86 (32 bit)';
-                break;
-            default:
-                $aReturn['OS Architecture'] = php_uname('m');
-                break;
+        $aReturn                    = [];
+        $aReturn['OS Architecture'] = php_uname('m');
+        $knownValues                = [
+            'AMD64' => 'x64 (64 bit)',
+            'i386'  => 'x86 (32 bit)',
+            'i586'  => 'x86 (32 bit)',
+        ];
+        if (array_key_exists(php_uname('m'), $knownValues)) {
+            $aReturn['OS Architecture'] = $knownValues[php_uname('m')];
         }
         $aReturn['OS Name+Host+Release+Version'] = [
             'name'    => php_uname('s'),
