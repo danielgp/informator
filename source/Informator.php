@@ -105,12 +105,13 @@ class Informator
         return $this->getClientBrowserDetails(['Browser', 'Device', 'OS'], $this->getDoctrineCaheFolder());
     }
 
-    private function getMySQLinfo($returnType)
+    private function getMySQLinfo($returnType = ['Databases Client', 'Engines Active', 'General', 'Variables Global'])
     {
         $this->connectToMySqlForInformation();
-        $sInfo = [];
+        $sInfo   = [];
+        $mLabels = $this->knownLabelsForMySql();
         foreach ($returnType as $value) {
-            $sInfo['MySQL'][$value] = $this->callDynamicFunctionToGetResults($this->knownLabelsForMySql()[$value]);
+            $sInfo['MySQL'][$value] = $this->callDynamicFunctionToGetResults($mLabels[$value]);
         }
         ksort($sInfo['MySQL']);
         return $sInfo['MySQL'];
@@ -147,53 +148,21 @@ class Informator
 
     private function getServerDetails()
     {
-        $serverMachineType = 'unknown';
-        $hst               = $this->informatorInternalArray['superGlobals']->getHttpHost();
-        $serverInfo        = [
-            'name'    => 'undisclosed',
-            'host'    => $hst,
-            'release' => 'undisclosed',
-            'version' => 'undisclosed',
-        ];
-        if (function_exists('php_uname')) {
-            $infServerFromPhp  = $this->getServerDetailsFromPhp();
-            $serverMachineType = $infServerFromPhp['OS Architecture'];
-            $serverInfo        = $infServerFromPhp['OS Name+Host+Release+Version'];
-        }
-        $srvIp = filter_var(gethostbyname($hst), FILTER_VALIDATE_IP);
+        $hst          = $this->informatorInternalArray['superGlobals']->getHttpHost();
+        $srvIp        = filter_var(gethostbyname($hst), FILTER_VALIDATE_IP);
+        $srvEvaluated = $this->getServerDetailsEvaluated($hst);
         return [
             'OS'              => php_uname(),
-            'OS Architecture' => $serverMachineType,
+            'OS Architecture' => $srvEvaluated['serverMachineType'],
             'OS Date/time'    => date('Y-m-d H:i:s'),
             'OS Ip'           => $srvIp,
             'OS Ip type'      => $this->checkIpIsPrivate($srvIp),
             'OS Ip v4/v6'     => $this->checkIpIsV4OrV6($srvIp),
-            'OS Name'         => $serverInfo['name'],
-            'OS Host'         => $serverInfo['host'],
-            'OS Release'      => $serverInfo['release'],
-            'OS Version'      => $serverInfo['version'],
+            'OS Name'         => $srvEvaluated['serverInfo']['name'],
+            'OS Host'         => $srvEvaluated['serverInfo']['host'],
+            'OS Release'      => $srvEvaluated['serverInfo']['release'],
+            'OS Version'      => $srvEvaluated['serverInfo']['version'],
         ];
-    }
-
-    private function getServerDetailsFromPhp()
-    {
-        $aReturn                    = [];
-        $aReturn['OS Architecture'] = php_uname('m');
-        $knownValues                = [
-            'AMD64' => 'x64 (64 bit)',
-            'i386'  => 'x86 (32 bit)',
-            'i586'  => 'x86 (32 bit)',
-        ];
-        if (array_key_exists(php_uname('m'), $knownValues)) {
-            $aReturn['OS Architecture'] = $knownValues[php_uname('m')];
-        }
-        $aReturn['OS Name+Host+Release+Version'] = [
-            'name'    => php_uname('s'),
-            'host'    => php_uname('n'),
-            'release' => php_uname('r'),
-            'version' => php_uname('v'),
-        ];
-        return $aReturn;
     }
 
     private function getTomcatDetails()

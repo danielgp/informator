@@ -77,7 +77,7 @@ trait InformatorKnownLabels
             'MySQL Engines All'      => ['getMySQLinfo', ['Engines All']],
             'MySQL General'          => ['getMySQLinfo', ['General']],
             'MySQL Variables Global' => ['getMySQLinfo', ['Variables Global']],
-            'MySQL Info'             => ['getMySQLinfo', ['Engines Active', 'General', 'Variables Global']],
+            'MySQL Info'             => ['getMySQLinfo'],
         ];
     }
 

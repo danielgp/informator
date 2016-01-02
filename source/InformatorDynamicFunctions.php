@@ -46,16 +46,15 @@ trait InformatorDynamicFunctions
 
     private function evaluateParameterAgainstKnownFunctions($inParameter)
     {
-        $outParameter         = $inParameter;
         $standardPhpFunctions = [
             'get_loaded_extensions',
             'stream_get_filters',
             'stream_get_transports',
             'stream_get_wrappers',
         ];
-        if (in_array($inParameter, $standardPhpFunctions)) {
-            $outParameter = call_user_func($inParameter);
+        if (in_array($inParameter, $standardPhpFunctions, true)) {
+            return call_user_func($inParameter);
         }
-        return $outParameter;
+        return $inParameter;
     }
 }
