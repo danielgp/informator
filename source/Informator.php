@@ -33,6 +33,7 @@ class Informator
 
     use \danielgp\common_lib\CommonCode,
         InformatorDynamicFunctions,
+        InformatorKnownLabels,
         InformatorServer;
 
     private $informatorInternalArray;
@@ -40,38 +41,27 @@ class Informator
     public function __construct()
     {
         $this->informatorInternalArray['composerLockFile'] = realpath('../') . DIRECTORY_SEPARATOR . 'composer.lock';
-        $this->informatorInternalArray['knownLabels']      = [
-            '--- List of known labels' => '',
-            'Apache Info'              => ['getApacheDetails'],
-            'Auto Dependencies'        => [
-                'getPackageDetailsFromGivenComposerLockFile',
-                $this->informatorInternalArray['composerLockFile'],
-            ],
-            'Auto Dependencies File'   => [$this->informatorInternalArray['composerLockFile']],
-            'Client Info'              => ['getClientBrowserDetailsForInformator', null],
-            'Informator File Details'  => ['getFileDetails', __FILE__],
-            'MySQL Databases All'      => ['getMySQLinfo', ['Databases All']],
-            'MySQL Databases Client'   => ['getMySQLinfo', ['Databases Client']],
-            'MySQL Engines Active'     => ['getMySQLinfo', ['Engines Active']],
-            'MySQL Engines All'        => ['getMySQLinfo', ['Engines All']],
-            'MySQL General'            => ['getMySQLinfo', ['General']],
-            'MySQL Variables Global'   => ['getMySQLinfo', ['Variables Global']],
-            'MySQL Info'               => ['getMySQLinfo', ['Engines Active', 'General', 'Variables Global']],
-            'Php Extensions Loaded'    => ['getPhpDetails', ['Extensions Loaded']],
-            'Php General'              => ['getPhpDetails', ['General']],
-            'Php INI Settings'         => ['getPhpDetails', ['INI Settings']],
-            'Php Stream Filters'       => ['getPhpDetails', ['Stream Filters']],
-            'Php Stream Transports'    => ['getPhpDetails', ['Stream Transports']],
-            'Php Stream Wrappers'      => ['getPhpDetails', ['Stream Wrappers']],
-            'Php Info'                 => ['getPhpDetails'],
-            'Server Info'              => ['getServerDetails'],
-            'System Info'              => ['systemInfo'],
-            'Tomcat Info'              => ['getTomcatDetails'],
-        ];
+        $this->informatorInternalArray['knownLabels']      = $this->knownLabelsGlobal([
+            'composerLockFile' => $this->informatorInternalArray['composerLockFile'],
+            'informatorFile'   => __FILE__,
+        ]);
         ksort($this->informatorInternalArray['knownLabels']);
         $rqst                                              = new \Symfony\Component\HttpFoundation\Request;
         $this->informatorInternalArray['superGlobals']     = $rqst->createFromGlobals();
         echo $this->setInterface();
+    }
+
+    private function connectToMySqlForInformation()
+    {
+        if (is_null($this->mySQLconnection)) {
+            $this->connectToMySql([
+                'host'     => MYSQL_HOST,
+                'port'     => MYSQL_PORT,
+                'username' => MYSQL_USERNAME,
+                'password' => MYSQL_PASSWORD,
+                'database' => MYSQL_DATABASE,
+            ]);
+        }
     }
 
     private function getApacheDetails()
@@ -112,37 +102,15 @@ class Informator
 
     private function getClientBrowserDetailsForInformator()
     {
-        $tmpFolder        = $this->getTemporaryFolder();
-        $tmpDoctrineCache = null;
-        clearstatcache();
-        if (is_dir($tmpFolder) && is_writable($tmpFolder)) {
-            $tmpDoctrineCache = $tmpFolder . DIRECTORY_SEPARATOR . 'DoctrineCache';
-        }
-        return $this->getClientBrowserDetails(['Browser', 'Device', 'OS'], $tmpDoctrineCache);
+        return $this->getClientBrowserDetails(['Browser', 'Device', 'OS'], $this->getDoctrineCaheFolder());
     }
 
     private function getMySQLinfo($returnType = ['Engines Active', 'General', 'Variables Global'])
     {
-        if (is_null($this->mySQLconnection)) {
-            $this->connectToMySql([
-                'host'     => MYSQL_HOST,
-                'port'     => MYSQL_PORT,
-                'username' => MYSQL_USERNAME,
-                'password' => MYSQL_PASSWORD,
-                'database' => MYSQL_DATABASE,
-            ]);
-        }
-        $sInfo           = [];
-        $aMySQLinfoLabel = [
-            'Databases All'    => ['getMySQLlistDatabases', false],
-            'Databases Client' => ['getMySQLlistDatabases', true],
-            'Engines Active'   => ['getMySQLlistEngines', true],
-            'Engines All'      => ['getMySQLlistEngines', false],
-            'General'          => ['getMySQLgenericInformations'],
-            'Variables Global' => ['getMySQLglobalVariables'],
-        ];
+        $this->connectToMySqlForInformation();
+        $sInfo = [];
         foreach ($returnType as $value) {
-            $sInfo['MySQL'][$value] = $this->callDynamicFunctionToGetResults($aMySQLinfoLabel[$value]);
+            $sInfo['MySQL'][$value] = $this->callDynamicFunctionToGetResults($this->knownLabelsForMySql()[$value]);
         }
         ksort($sInfo['MySQL']);
         return $sInfo['MySQL'];
@@ -163,14 +131,7 @@ class Informator
                     $sInfo['PHP'][$value] = ini_get_all(null, false);
                     break;
                 default:
-                    $stLabels             = [
-                        'Extensions Loaded' => ['setArrayValuesAsKey', 'get_loaded_extensions'],
-                        'Stream Filters'    => ['setArrayValuesAsKey', 'stream_get_filters'],
-                        'Stream Transports' => ['setArrayValuesAsKey', 'stream_get_transports'],
-                        'Stream Wrappers'   => ['setArrayValuesAsKey', 'stream_get_wrappers'],
-                        'Temporary Folder'  => ['getTemporaryFolder'],
-                    ];
-                    $sInfo['PHP'][$value] = $this->callDynamicFunctionToGetResults($stLabels[$value]);
+                    $sInfo['PHP'][$value] = $this->callDynamicFunctionToGetResults($this->knownLabelsForPhp()[$value]);
                     break;
             }
         }
@@ -227,11 +188,6 @@ class Informator
             'version' => php_uname('v'),
         ];
         return $aReturn;
-    }
-
-    private function getTemporaryFolder()
-    {
-        return sys_get_temp_dir() . DIRECTORY_SEPARATOR;
     }
 
     private function getTomcatDetails()

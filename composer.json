@@ -25,6 +25,7 @@
         },
         "classmap": [
             "source/InformatorDynamicFunctions.php",
+            "source/InformatorKnownLabels.php",
             "source/InformatorServer.php",
             "source/Informator.php"
         ]

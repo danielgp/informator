@@ -3,7 +3,7 @@
 /*
  * The MIT License
  *
- * Copyright 2016 Transformer-.
+ * Copyright 2016 Daniel Popiniuc.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,8 +29,24 @@ namespace danielgp\informator;
 trait InformatorServer
 {
 
+    protected function getDoctrineCaheFolder()
+    {
+        $tmpFolder        = $this->getTemporaryFolder();
+        $tmpDoctrineCache = null;
+        clearstatcache();
+        if (is_dir($tmpFolder) && is_writable($tmpFolder)) {
+            $tmpDoctrineCache = $tmpFolder . DIRECTORY_SEPARATOR . 'DoctrineCache';
+        }
+        return $tmpDoctrineCache;
+    }
+
     protected function getServerSoftware()
     {
         return $_SERVER['SERVER_SOFTWARE'];
+    }
+
+    protected function getTemporaryFolder()
+    {
+        return sys_get_temp_dir() . DIRECTORY_SEPARATOR;
     }
 }

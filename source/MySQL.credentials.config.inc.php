@@ -29,7 +29,7 @@ if (!defined('MYSQL_HOST')) {
     define('MYSQL_HOST', '127.0.0.1');
 }
 if (!defined('MYSQL_PORT')) {
-    define('MYSQL_PORT', 3306);
+    define('MYSQL_PORT', 5700);
 }
 if (!defined('MYSQL_USERNAME')) {
     define('MYSQL_USERNAME', 'web_3rdparty_inf');
