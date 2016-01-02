@@ -180,26 +180,25 @@ class Informator
 
     private function setInterface()
     {
+        $outputArray    = [
+            'showLabels'    => true,
+            'feedback'      => '<span style="background-color:red;color:white;">Label not set...</span>',
+            'arrayToReturn' => [],
+        ];
         $requestedLabel = $this->informatorInternalArray['superGlobals']->get('Label');
-        $showLabels     = true;
-        $feedback       = '<span style="background-color:red;color:white;">Label not set...</span>';
-        $arToReturn     = [];
         if (isset($requestedLabel)) {
-            $feedback = '<span style="background-color:red;color:white;">'
+            $outputArray['feedback'] = '<span style="background-color:red;color:white;">'
                     . 'Unknown label transmited...'
                     . '</span>';
             if (array_key_exists($requestedLabel, $this->informatorInternalArray['knownLabels'])) {
-                $showLabels = false;
-                $feedback   = '';
-                $lblValue   = $this->informatorInternalArray['knownLabels'][$requestedLabel];
-                $arToReturn = $this->performLabelDefinition($requestedLabel, $lblValue);
+                $lblValue    = $this->informatorInternalArray['knownLabels'][$requestedLabel];
+                $outputArray = [
+                    'showLabels'    => false,
+                    'feedback'      => '',
+                    'arrayToReturn' => $this->performLabelDefinition($requestedLabel, $lblValue),
+                ];
             }
         }
-        $outputArray = [
-            'showLabels'    => $showLabels,
-            'feedback'      => $feedback,
-            'arrayToReturn' => $arToReturn,
-        ];
         return $this->setOutputInterface($outputArray);
     }
 
@@ -225,27 +224,32 @@ class Informator
     private function setOutputInterface($inArray)
     {
         if ($inArray['showLabels']) {
-            $sReturn    = [];
-            $sReturn[]  = $this->setHeaderCommon([
-                'lang'  => 'en-US',
-                'title' => 'Informator'
-            ]);
-            $sReturn[]  = $inArray['feedback'] . '<p style="background-color:green;color:white;">'
-                    . 'So you might want to choose one from the list below:</p>'
-                    . '<ul>';
-            $arToReturn = array_keys($this->informatorInternalArray['knownLabels']);
-            foreach ($arToReturn as $value) {
-                $sReturn[] = '<li>'
-                        . '<a href="?Label=' . urlencode($value) . '" target="_blank">' . $value . '</a>'
-                        . '</li>';
-            }
-            $sReturn[] = '</ul>' . $this->setFooterCommon();
-            return implode('', $sReturn);
+            return $this->setOutputWithLabels($inArray);
         }
         $this->setHeaderGZiped();
         $this->setHeaderNoCache('application/json');
         echo $this->setArrayToJson($inArray['arrayToReturn']);
         $this->setFooterGZiped();
+    }
+
+    private function setOutputWithLabels($inArray)
+    {
+        $sReturn    = [];
+        $sReturn[]  = $this->setHeaderCommon([
+            'lang'  => 'en-US',
+            'title' => 'Informator'
+        ]);
+        $sReturn[]  = $inArray['feedback'] . '<p style="background-color:green;color:white;">'
+                . 'So you might want to choose one from the list below:</p>'
+                . '<ul>';
+        $arToReturn = array_keys($this->informatorInternalArray['knownLabels']);
+        foreach ($arToReturn as $value) {
+            $sReturn[] = '<li>'
+                    . '<a href="?Label=' . urlencode($value) . '" target="_blank">' . $value . '</a>'
+                    . '</li>';
+        }
+        $sReturn[] = '</ul>' . $this->setFooterCommon();
+        return implode('', $sReturn);
     }
 
     /**
