@@ -61,13 +61,14 @@ class Informator
 
     private function getApacheDetails()
     {
-        $srvSoftwareArray = explode(' ', $this->getServerSoftware());
+        $srvSoftware      = $this->informatorInternalArray['superGlobals']->server->get('SERVER_SOFTWARE');
+        $srvSoftwareArray = explode(' ', $srvSoftware);
         $sInfo            = [];
         $tmp              = explode('/', $srvSoftwareArray[0]);
         if (strpos($srvSoftwareArray[0], 'Apache') !== false) {
             $sInfo['Apache'] = [
                 'Name'      => $tmp[0],
-                'Signature' => $this->getServerSoftware(),
+                'Signature' => $srvSoftware,
                 'Version'   => $tmp[1]
             ];
         }
