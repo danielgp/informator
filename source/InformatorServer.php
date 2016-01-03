@@ -81,11 +81,6 @@ trait InformatorServer
         return $aReturn;
     }
 
-    protected function getServerSoftware()
-    {
-        return $_SERVER['SERVER_SOFTWARE'];
-    }
-
     protected function getTemporaryFolder()
     {
         return sys_get_temp_dir() . DIRECTORY_SEPARATOR;
