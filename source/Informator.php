@@ -41,7 +41,7 @@ class Informator
 
     public function __construct()
     {
-        $this->informatorInternalArray['composerLockFile'] = realpath('../') . DIRECTORY_SEPARATOR . 'composer.lock';
+        $this->informatorInternalArray['composerLockFile'] = 'composer.lock';
         $this->informatorInternalArray['knownLabels']      = $this->knownLabelsGlobal([
             'composerLockFile' => $this->informatorInternalArray['composerLockFile'],
             'informatorFile'   => __FILE__,
