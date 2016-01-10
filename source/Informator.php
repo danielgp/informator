@@ -32,6 +32,7 @@ class Informator
 {
 
     use \danielgp\common_lib\CommonCode,
+        \danielgp\composer_packages_listing\ComposerPackagesListing,
         InformatorDynamicFunctions,
         InformatorKnownLabels,
         InformatorServer,

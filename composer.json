@@ -14,13 +14,16 @@
         "php": ">=5.5",
         "ext-curl": "*",
         "ext-mysqli": "*",
+        "danielgp/browser-agent-info": ">1.0",
         "danielgp/common-lib": ">2.7",
+        "danielgp/composer-packages-listing": ">1.0",
         "symfony/http-foundation": ">3.0"
     },
     "autoload": {
         "psr-4": {
             "": "source/",
             "danielgp\\common_lib\\source\\": "vendor/danielgp/common-lib/source/",
+            "danielgp\\composer_packages_listing\\": "vendor/danielgp/composer-packages-listing/",
             "DeviceDetector\\" : "vendor/piwik/device-detector/"
         },
         "classmap": [
