@@ -21,7 +21,6 @@
     },
     "autoload": {
         "psr-4": {
-            "": "source/",
             "danielgp\\common_lib\\source\\": "vendor/danielgp/common-lib/source/",
             "danielgp\\composer_packages_listing\\": "vendor/danielgp/composer-packages-listing/",
             "DeviceDetector\\" : "vendor/piwik/device-detector/"
