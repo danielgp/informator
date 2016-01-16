@@ -102,7 +102,7 @@ class Informator
         return $this->getClientBrowserDetails(['Browser', 'Device', 'OS'], $this->getDoctrineCaheFolder());
     }
 
-    private function getMySQLinfo($returnType = ['Databases Client', 'Engines Active', 'General', 'Variables Global'])
+    private function getMySQLinfo($returnType = ['Engines Active', 'General', 'Variables Global'])
     {
         $this->connectToMySqlForInformation();
         $sInfo   = [];
