@@ -1,1 +1,0 @@
-"D:\www\App\PHP\PHP70\php.exe" "-c" "d:\www\Config\PHP\PHP70ssl\php.ini" "D:\Git\Cmn\StableLatest\vendor\phpmd\phpmd\src\bin\phpmd" "--exclude" "vendor" "D:\Git\GitHub\danielgp.GitHub\informator" "xml" "cleancode,codesize,controversial,design,naming,unusedcode" "--suffixes" "php4,php5,php3,phtml,phpt,inc,php" --reportfile "D:\Git\GitHub\danielgp.GitHub\informator\tests\phpmd.xml"
