@@ -48,7 +48,7 @@ class Informator
             'informatorFile'   => __FILE__,
         ]);
         ksort($this->informatorInternalArray['knownLabels']);
-        $rqst                                              = new \Symfony\Component\HttpFoundation\Request;
+        $rqst                                              = new \Symfony\Component\HttpFoundation\Request();
         $this->informatorInternalArray['superGlobals']     = $rqst->createFromGlobals();
         echo $this->setInterface();
     }

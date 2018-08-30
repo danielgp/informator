@@ -37,9 +37,25 @@ trait ConfigurationMySQL
             'database' => 'information_schema',
             'host'     => '127.0.0.1',
             'password' => 'G6FTigKY(&w{8yquWV%SMe`\?z+(sJ',
-            'port'     => 5700,
+            'port'     => 3306,
             'username' => 'web_3rdparty_inf',
             'verbose'  => 'MySQL @ localhost',
         ];
+    }
+
+    private function storeMySqlUsernameCreation()
+    {
+        return "CREATE USER IF NOT EXISTS 'web_3rdparty_inf'@'127.0.0.1' "
+                . "IDENTIFIED WITH 'mysql_native_password' BY 'G6FTigKY(&w{8yquWV%SMe`\?z+(sJ' PASSWORD EXPIRE NEVER;";
+    }
+
+    private function storeMySqlUsernameGrants()
+    {
+        return "GRANT SHOW DATABASES, SHOW VIEW TO 'web_3rdparty_inf'@'127.0.0.1';";
+    }
+
+    private function storeMySqlReloadSecurityAccessRights()
+    {
+        return "GRANT SHOW DATABASES, SHOW VIEW TO 'web_3rdparty_inf'@'127.0.0.1';";
     }
 }
