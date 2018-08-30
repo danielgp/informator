@@ -105,8 +105,8 @@ class Informator
     private function getMySQLinfo($returnType = ['Engines Active', 'General', 'Variables Global'])
     {
         $this->connectToMySqlForInformation();
-        $sInfo   = [];
-        $mLabels = $this->knownLabelsForMySql();
+        $sInfo['MySQL'] = [];
+        $mLabels        = $this->knownLabelsForMySql();
         foreach ($returnType as $value) {
             $sInfo['MySQL'][$value] = $this->callDynamicFunctionToGetResults($mLabels[$value]);
         }
@@ -116,7 +116,7 @@ class Informator
 
     private function getPhpDetails($returnType = ['General', 'INI Settings', 'Extensions Loaded', 'Temporary Folder'])
     {
-        $sInfo = [];
+        $sInfo['PHP'] = [];
         foreach ($returnType as $value) {
             $sInfo['PHP'][$value] = $this->getPhpDetailsIndividually($value);
         }
@@ -242,7 +242,7 @@ class Informator
         $arToReturn = array_keys($this->informatorInternalArray['knownLabels']);
         foreach ($arToReturn as $value) {
             $sReturn[] = '<li>'
-                    . '<a href="?Label=' . urlencode($value) . '" target="_blank">' . $value . '</a>'
+                    . '<a href="?Label=' . urlencode(((string) $value)) . '" target="_blank">' . $value . '</a>'
                     . '</li>';
         }
         $sReturn[] = '</ul>' . $this->setFooterCommon();
