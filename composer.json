@@ -11,13 +11,13 @@
         }
     ],
     "require": {
-        "php": ">=5.5",
+        "php": ">=7.0",
         "ext-curl": "*",
         "ext-mysqli": "*",
-        "danielgp/browser-agent-info": ">1.0",
-        "danielgp/common-lib": ">2.7",
-        "danielgp/composer-packages-listing": ">1.0",
-        "symfony/http-foundation": ">3.0"
+        "danielgp/browser-agent-info": "^1",
+        "danielgp/common-lib": "^3",
+        "danielgp/composer-packages-listing": "^2",
+        "symfony/http-foundation": "^4"
     },
     "autoload": {
         "psr-4": {
@@ -36,6 +36,11 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "archive": {
-        "exclude": ["/nbproject", "/vendor", "/tests", "/tmp"]
+        "exclude": [
+            "/nbproject", 
+            "/results",
+            "/tmp",
+            "/vendor"
+        ]
     }
 }
