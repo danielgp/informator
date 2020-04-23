@@ -11,13 +11,12 @@
         }
     ],
     "require": {
-        "php": ">=7.0",
+        "php": "^7.2 || ^7.3 || ^7.4",
         "ext-curl": "*",
         "ext-mysqli": "*",
         "danielgp/browser-agent-info": "^1",
         "danielgp/common-lib": "^3",
-        "danielgp/composer-packages-listing": "^2",
-        "symfony/http-foundation": "^4"
+        "danielgp/composer-packages-listing": "^2"
     },
     "autoload": {
         "psr-4": {
